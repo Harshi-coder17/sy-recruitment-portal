@@ -285,47 +285,91 @@ function doPost(e) {
           ['Resume',             `${fileName} — ${resumeUrl}`],
         ].filter(([, v]) => v);
 
-        // Build table rows with all values HTML-escaped (H2 fix)
-        const tableRows = pairs.map(([k, v]) =>
-          `<tr>` +
-          `<td style="padding:8px 14px;color:#888;font-weight:600;white-space:nowrap;vertical-align:top;border-bottom:1px solid #252535">${escapeHtml(k)}</td>` +
-          `<td style="padding:8px 14px;color:#e8e8f0;word-break:break-word;border-bottom:1px solid #252535">${escapeHtml(v)}</td>` +
-          `</tr>`
-        ).join('');
+        // Build table rows — spacious layout, alternating row bg, all values HTML-escaped
+        const tableRows = pairs.map(([k, v], i) => {
+          const rowBg = i % 2 === 0 ? '#16161f' : '#111118';
+          return `<tr style="background:${rowBg};">` +
+            `<td style="padding:13px 18px;color:#7c6bff;font-weight:600;font-size:12px;` +
+            `white-space:nowrap;vertical-align:top;width:38%;` +
+            `border-bottom:1px solid #1e1e2e;text-transform:uppercase;letter-spacing:0.5px;">${escapeHtml(k)}</td>` +
+            `<td style="padding:13px 18px;color:#ddddf0;font-size:13px;line-height:1.7;` +
+            `word-break:break-word;vertical-align:top;` +
+            `border-bottom:1px solid #1e1e2e;">${escapeHtml(v)}</td>` +
+            `</tr>`;
+        }).join('');
 
         const htmlBody = `
 <!DOCTYPE html>
 <html lang="en">
-<body style="margin:0;padding:0;background:#0a0a0f;font-family:Arial,sans-serif;">
-<div style="max-width:620px;margin:32px auto;background:#0a0a0f;padding:0 16px 40px;">
+<head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/></head>
+<body style="margin:0;padding:0;background:#0d0d14;font-family:Arial,Helvetica,sans-serif;">
+<div style="max-width:640px;margin:0 auto;background:#0d0d14;">
 
-  <!-- Header -->
-  <div style="text-align:center;padding:36px 0 24px;">
-    <div style="display:inline-block;width:64px;height:64px;line-height:64px;font-size:32px;
-                border-radius:50%;background:linear-gradient(135deg,#5b4bdc,#7c6bff);color:#fff;">✓</div>
-    <h1 style="color:#fff;font-size:22px;margin:16px 0 4px;font-weight:700;">Application Submitted!</h1>
-    <p style="color:#888;font-size:13px;margin:0;">OWASP TIET Student Chapter &middot; Recruitment 2026</p>
+  <!-- LOGO BANNER -->
+  <div style="background:#111118;border-bottom:2px solid #5b4bdc;padding:28px 40px;text-align:center;">
+    <img src="https://sy-recruitment.netlify.app/logo.png"
+         alt="OWASP TIET Student Chapter" width="220"
+         style="display:block;margin:0 auto;
+                filter:drop-shadow(0 0 10px rgba(124,107,255,0.7)) drop-shadow(0 0 24px rgba(91,75,220,0.45));" />
   </div>
 
-  <!-- Greeting -->
-  <p style="color:#b0b0c8;font-size:14px;line-height:1.8;margin-bottom:24px;">
-    Hi <strong style="color:#fff;">${eName}</strong>,<br/>
-    Here&rsquo;s a copy of your submitted application. We&rsquo;ll review it carefully and reach out soon.
-  </p>
+  <!-- HERO -->
+  <div style="background:linear-gradient(135deg,#1a1530 0%,#111118 100%);
+              padding:36px 40px 28px;text-align:center;border-bottom:1px solid #252535;">
+    <div style="display:inline-block;width:56px;height:56px;line-height:56px;font-size:26px;
+                border-radius:50%;background:linear-gradient(135deg,#5b4bdc,#7c6bff);
+                color:#fff;margin-bottom:16px;">✓</div>
+    <h1 style="color:#ffffff;font-size:22px;font-weight:700;margin:0 0 8px;letter-spacing:-0.3px;">
+      Application Submitted!
+    </h1>
+    <p style="color:#888;font-size:13px;margin:0;">
+      OWASP TIET Student Chapter &middot; Recruitment 2026
+    </p>
+  </div>
 
-  <!-- Response table -->
-  <table style="width:100%;border-collapse:collapse;background:#16161f;border-radius:10px;
-                overflow:hidden;font-size:13px;margin-bottom:28px;">
-    ${tableRows}
-  </table>
+  <!-- BODY -->
+  <div style="padding:36px 40px;">
 
-  <!-- Footer -->
-  <p style="color:#5b4bdc;font-size:13px;text-align:center;">
-    Stay sharp. Stay secure. 🔐
-  </p>
-  <p style="color:#444;font-size:11px;text-align:center;margin-top:8px;">
-    This is an automated email. Please do not reply.
-  </p>
+    <!-- Greeting -->
+    <p style="color:#b8b8d0;font-size:15px;line-height:1.9;margin:0 0 32px;">
+      Hi <strong style="color:#ffffff;">${eName}</strong>,<br/>
+      Thank you for applying to the OWASP TIET Student Chapter!
+      Below is a copy of your submitted application for your records.
+      We&rsquo;ll review it carefully and reach out before the deadline.
+    </p>
+
+    <!-- Section label -->
+    <p style="color:#5b4bdc;font-size:11px;font-weight:700;letter-spacing:1.4px;
+              text-transform:uppercase;margin:0 0 14px;padding-bottom:10px;
+              border-bottom:1px solid #2a2a40;">
+      Your Submitted Responses
+    </p>
+
+    <!-- Response table -->
+    <table style="width:100%;border-collapse:collapse;margin-bottom:36px;">
+      ${tableRows}
+    </table>
+
+    <!-- Divider -->
+    <hr style="border:none;border-top:1px solid #252535;margin:0 0 28px;"/>
+
+    <!-- Sign-off -->
+    <p style="color:#7c6bff;font-size:15px;font-weight:600;text-align:center;margin:0 0 10px;">
+      Stay sharp. Stay secure. 🔐
+    </p>
+    <p style="color:#555;font-size:12px;text-align:center;margin:0;">
+      This is an automated confirmation email — please do not reply.
+    </p>
+
+  </div>
+
+  <!-- FOOTER BAR -->
+  <div style="background:#111118;border-top:1px solid #252535;padding:18px 40px;text-align:center;">
+    <p style="color:#444;font-size:11px;margin:0;">
+      &copy; 2026 OWASP TIET Student Chapter &middot; Thapar Institute of Engineering &amp; Technology
+    </p>
+  </div>
+
 </div>
 </body>
 </html>`;
