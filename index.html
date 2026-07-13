@@ -1,0 +1,1089 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>OWASP TIET Student Chapter | Recruitment 2026</title>
+  <meta name="description" content="Apply to join the OWASP TIET Student Chapter. Applications open for Batch of 2029. Deadline: 20th July 2026." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:          #0a0a0f;
+      --surface:     #111118;
+      --card:        #16161f;
+      --border:      #252535;
+      --border-hi:   #3a3a5c;
+      --accent:      #5b4bdc;
+      --accent2:     #7c6bff;
+      --accent-glow: rgba(91,75,220,0.35);
+      --green:       #22c55e;
+      --red:         #ef4444;
+      --text:        #e8e8f0;
+      --muted:       #888899;
+      --label:       #b0b0c8;
+      --radius:      14px;
+      --radius-sm:   8px;
+      --transition:  0.22s cubic-bezier(.4,0,.2,1);
+    }
+
+    html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 0 clamp(12px, 4vw, 24px) 80px;
+      background-image:
+        radial-gradient(ellipse 80% 60% at 50% -20%, rgba(91,75,220,0.18) 0%, transparent 70%),
+        radial-gradient(ellipse 40% 40% at 80% 80%, rgba(124,107,255,0.08) 0%, transparent 60%);
+    }
+
+    /* ─── HEADER ─── */
+    .form-header {
+      width: 100%; max-width: 680px;
+      margin-top: 48px; margin-bottom: 0;
+      text-align: center;
+    }
+
+    /* Logo card — transparent, no white box */
+    .logo-card {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 32px;
+    }
+
+    .logo-img {
+      width: 100%;
+      max-width: 320px;
+      height: auto;
+      display: block;
+      /* Neon purple glow directly on the logo */
+      filter:
+        drop-shadow(0 0 8px rgba(124,107,255,0.8))
+        drop-shadow(0 0 20px rgba(124,107,255,0.55))
+        drop-shadow(0 0 40px rgba(91,75,220,0.35));
+    }
+
+    .header-title {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: clamp(26px, 5vw, 36px); font-weight: 700; line-height: 1.2;
+      background: linear-gradient(135deg, #fff 30%, var(--accent2) 100%);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+      margin-bottom: 16px;
+    }
+    .header-desc { font-size: 15px; color: var(--label); line-height: 1.7; max-width: 540px; margin: 0 auto 12px; }
+    .header-badges { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; margin-top: 16px; }
+    .badge { display: inline-flex; align-items: center; gap: 6px; padding: 6px 14px; border-radius: 999px; font-size: 13px; font-weight: 600; border: 1px solid; }
+    .badge-warning { background: rgba(234,179,8,0.1);  border-color: rgba(234,179,8,0.4);  color: #fbbf24; }
+    .badge-danger  { background: rgba(239,68,68,0.1);  border-color: rgba(239,68,68,0.4);  color: #f87171; }
+
+    /* ─── PROGRESS ─── */
+    .progress-wrap { width: 100%; max-width: 680px; margin: 36px 0 28px; }
+    .progress-meta { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+    .progress-label { font-size: 13px; font-weight: 600; color: var(--accent2); letter-spacing: 0.5px; text-transform: uppercase; }
+    .progress-count { font-size: 13px; color: var(--muted); }
+    .progress-track { height: 6px; background: var(--border); border-radius: 999px; overflow: hidden; }
+    .progress-fill  { height: 100%; background: linear-gradient(90deg, var(--accent), var(--accent2)); border-radius: 999px; transition: width 0.5s cubic-bezier(.4,0,.2,1); box-shadow: 0 0 12px var(--accent-glow); }
+    .step-dots { display: flex; gap: 8px; justify-content: center; margin-top: 14px; }
+    .step-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--border); transition: var(--transition); }
+    .step-dot.active { background: var(--accent2); transform: scale(1.3); }
+    .step-dot.done   { background: var(--green); }
+
+    /* ─── FORM CONTAINER ─── */
+    .form-container { width: 100%; max-width: 680px; }
+    .form-page { display: none; animation: fadeSlide 0.35s cubic-bezier(.4,0,.2,1); }
+    .form-page.active { display: block; }
+    @keyframes fadeSlide { from { opacity:0; transform:translateY(18px); } to { opacity:1; transform:translateY(0); } }
+
+    .section-header {
+      background: linear-gradient(135deg, var(--accent) 0%, var(--accent2) 100%);
+      border-radius: var(--radius) var(--radius) 0 0;
+      padding: 18px 24px; margin-bottom: 2px;
+      display: flex; align-items: center; gap: 12px;
+    }
+    .section-icon  { font-size: 22px; }
+    .section-title { font-family: 'Space Grotesk', sans-serif; font-size: 18px; font-weight: 700; color: #fff; letter-spacing: -0.2px; }
+
+    /* ─── FIELD CARD ─── */
+    .field-card {
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: var(--radius); padding: 24px; margin-bottom: 14px;
+      transition: border-color var(--transition), box-shadow var(--transition); position: relative;
+    }
+    .field-card:focus-within { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(91,75,220,0.15); }
+    .field-card.error        { border-color: var(--red);    box-shadow: 0 0 0 3px rgba(239,68,68,0.12); }
+
+    .field-label   { display: block; font-size: 15px; font-weight: 600; color: var(--text); margin-bottom: 12px; line-height: 1.5; }
+    .required-star { color: var(--red); margin-left: 4px; }
+    .field-hint    { font-size: 12px; color: var(--muted); margin-top: 8px; }
+    .error-msg     { font-size: 12px; color: var(--red);   margin-top: 8px; display: none; }
+    .field-card.error .error-msg { display: block; }
+
+    /* ─── INPUTS ─── */
+    input[type="text"],
+    input[type="email"],
+    input[type="tel"],
+    input[type="url"],
+    textarea {
+      width: 100%; background: var(--surface); border: 1px solid var(--border-hi);
+      border-radius: var(--radius-sm); color: var(--text);
+      font-family: 'Inter', sans-serif;
+      /* 16px minimum prevents iOS Safari from auto-zooming on focus */
+      font-size: 16px;
+      padding: 12px 16px; outline: none;
+      transition: border-color var(--transition), box-shadow var(--transition); resize: none;
+    }
+    input::placeholder, textarea::placeholder { color: var(--muted); font-size: 14px; }
+    input:focus, textarea:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(91,75,220,0.2); }
+    textarea { min-height: 90px; line-height: 1.6; }
+
+    /* ─── RADIO CHOICES ─── */
+    .choices { display: flex; flex-direction: column; gap: 10px; }
+    .choice-item {
+      display: flex; align-items: center; gap: 14px; padding: 14px 18px;
+      background: var(--surface); border: 1px solid var(--border-hi);
+      border-radius: var(--radius-sm); cursor: pointer;
+      transition: border-color var(--transition), background var(--transition), transform var(--transition);
+      user-select: none; position: relative;
+    }
+    .choice-item:hover { border-color: var(--accent); background: rgba(91,75,220,0.08); transform: translateX(3px); }
+    .choice-item input[type="radio"] { width: 20px; height: 20px; accent-color: var(--accent2); cursor: pointer; flex-shrink: 0; }
+    .choice-item.selected { border-color: var(--accent2); background: rgba(91,75,220,0.15); }
+    .choice-item.selected::after { content:''; position:absolute; left:0; top:0; bottom:0; width:3px; background:var(--accent2); border-radius:var(--radius-sm) 0 0 var(--radius-sm); }
+    .choice-label { font-size: 15px; font-weight: 500; color: var(--text); }
+
+    /* ─── FILE UPLOAD ─── */
+    .file-zone {
+      border: 2px dashed var(--border-hi); border-radius: var(--radius-sm);
+      padding: 36px 24px; text-align: center; cursor: pointer;
+      transition: border-color var(--transition), background var(--transition); position: relative;
+    }
+    .file-zone:hover, .file-zone.dragover { border-color: var(--accent2); background: rgba(91,75,220,0.08); }
+    .file-zone input[type="file"] { position:absolute; inset:0; opacity:0; cursor:pointer; width:100%; height:100%; }
+    .file-icon       { font-size: 36px; margin-bottom: 12px; display: block; }
+    .file-zone-label { font-size: 15px; font-weight: 600; color: var(--accent2); display: block; margin-bottom: 6px; }
+    .file-zone-hint  { font-size: 13px; color: var(--muted); }
+    .file-name       { font-size: 13px; color: var(--green); margin-top: 10px; font-weight: 500; display: none; }
+
+    /* ─── BUTTONS ─── */
+    .btn-row { display: flex; justify-content: space-between; align-items: center; margin-top: 28px; gap: 12px; }
+    .btn {
+      display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+      padding: 14px 28px; border-radius: var(--radius-sm);
+      font-family: 'Inter', sans-serif; font-size: 15px; font-weight: 600;
+      border: none; cursor: pointer; transition: var(--transition); letter-spacing: 0.2px;
+    }
+    .btn-primary { background: linear-gradient(135deg, var(--accent), var(--accent2)); color:#fff; box-shadow:0 4px 20px var(--accent-glow); flex:1; }
+    .btn-primary:hover { transform:translateY(-2px); box-shadow:0 8px 30px var(--accent-glow); }
+    .btn-ghost { background:var(--card); color:var(--label); border:1px solid var(--border); }
+    .btn-ghost:hover { border-color:var(--border-hi); color:var(--text); }
+    .btn-submit { background:linear-gradient(135deg,#22c55e,#16a34a); color:#fff; box-shadow:0 4px 20px rgba(34,197,94,0.3); flex:1; }
+    .btn-submit:hover:not(:disabled) { transform:translateY(-2px); box-shadow:0 8px 30px rgba(34,197,94,0.4); }
+    .btn-submit:disabled { opacity:0.7; cursor:not-allowed; }
+
+    /* ─── SPINNER ─── */
+    .spinner {
+      width:18px; height:18px; flex-shrink:0;
+      border:2.5px solid rgba(255,255,255,0.3);
+      border-top-color:#fff; border-radius:50%;
+      animation:spin 0.75s linear infinite;
+    }
+    @keyframes spin { to { transform:rotate(360deg); } }
+
+    /* ─── SUCCESS ─── */
+    #success-page { display:none; text-align:center; padding:80px 24px; animation:fadeSlide 0.5s ease; }
+    .success-icon {
+      width:90px; height:90px; border-radius:50%;
+      background:linear-gradient(135deg,#22c55e,#16a34a);
+      display:flex; align-items:center; justify-content:center;
+      font-size:44px; margin:0 auto 28px;
+      box-shadow:0 0 50px rgba(34,197,94,0.4);
+      animation:pulse 2s infinite;
+    }
+    @keyframes pulse { 0%,100%{box-shadow:0 0 50px rgba(34,197,94,0.4);}50%{box-shadow:0 0 80px rgba(34,197,94,0.6);} }
+    .success-title { font-family:'Space Grotesk',sans-serif; font-size:32px; font-weight:700; color:var(--text); margin-bottom:12px; }
+    .success-desc  { font-size:16px; color:var(--label); line-height:1.7; }
+
+    /* ─── TOAST ─── */
+    .toast {
+      position:fixed; bottom:32px; left:50%; transform:translateX(-50%) translateY(120px);
+      background:#1e1e2e; border:1px solid var(--red); color:#f87171;
+      padding:14px 24px; border-radius:var(--radius-sm); font-size:14px; font-weight:500;
+      box-shadow:0 8px 32px rgba(0,0,0,0.5); z-index:9999;
+      transition:transform 0.35s cubic-bezier(.4,0,.2,1); max-width:90vw; text-align:center;
+    }
+    .toast.show { transform:translateX(-50%) translateY(0); }
+    .toast.success-toast { border-color:var(--green); color:var(--green); }
+
+    /* ─── SEND-COPY TOGGLE ─── */
+    .toggle-row  { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
+    .toggle-wrap { position: relative; display: inline-block; width: 48px; height: 26px; flex-shrink: 0; }
+    .toggle-wrap input { opacity: 0; width: 0; height: 0; }
+    .toggle-slider {
+      position: absolute; cursor: pointer; inset: 0;
+      background: var(--border-hi); border-radius: 26px;
+      transition: background 0.3s;
+    }
+    .toggle-slider::before {
+      content: ''; position: absolute;
+      width: 20px; height: 20px; left: 3px; bottom: 3px;
+      background: #fff; border-radius: 50%;
+      transition: transform 0.3s;
+    }
+    .toggle-wrap input:checked + .toggle-slider { background: var(--accent); }
+    .toggle-wrap input:checked + .toggle-slider::before { transform: translateX(22px); }
+    .toggle-label { font-size: 14px; color: var(--label); line-height: 1.4; }
+
+    /* ─── RESPONSIVE ─── */
+
+    /* Tablet / large phone (≤ 640px) */
+    @media (max-width:640px) {
+      .form-header { margin-top: 28px; }
+      .logo-img    { max-width: 260px; }
+
+      .header-title { font-size: clamp(20px, 6vw, 28px); }
+      .header-desc  { font-size: 14px; }
+
+      .progress-wrap { margin: 24px 0 18px; }
+
+      .field-card   { padding: 18px 16px; margin-bottom: 10px; }
+      .field-label  { font-size: 14px; margin-bottom: 10px; }
+      .field-hint, .error-msg { font-size: 11px; }
+
+      .section-header { padding: 14px 16px; }
+      .section-title  { font-size: 16px; }
+      .section-icon   { font-size: 18px; }
+
+      .choice-item  { padding: 12px 14px; gap: 10px; }
+      .choice-label { font-size: 14px; }
+      .choice-item input[type="radio"] { width: 18px; height: 18px; }
+
+      .file-zone { padding: 24px 16px; }
+      .file-icon { font-size: 28px; margin-bottom: 8px; }
+      .file-zone-label { font-size: 14px; }
+
+      .btn { padding: 13px 20px; font-size: 14px; }
+      .btn-row { margin-top: 20px; gap: 10px; }
+
+      .success-title { font-size: 24px; }
+      .success-desc  { font-size: 14px; }
+      #success-page  { padding: 48px 16px; }
+    }
+
+    /* Small phone (≤ 480px) */
+    @media (max-width:480px) {
+      .logo-img { max-width: 210px; }
+      .btn-row  { flex-direction: column-reverse; }
+      .btn      { width: 100%; justify-content: center; }
+      .badge    { font-size: 12px; padding: 5px 10px; }
+      /* Prevent horizontal overflow from long placeholder text */
+      input, textarea { min-width: 0; }
+    }
+
+    ::-webkit-scrollbar { width:6px; }
+    ::-webkit-scrollbar-track { background:var(--bg); }
+    ::-webkit-scrollbar-thumb { background:var(--border-hi); border-radius:3px; }
+  </style>
+</head>
+<body>
+
+<!-- ═══ HEADER ═══ -->
+<header class="form-header">
+  <!-- Original black OWASP logo preserved; neon purple drop-shadow for visibility -->
+  <div class="logo-card">
+    <img src="logo.png" alt="OWASP TIET Logo" class="logo-img" />
+  </div>
+  <h1 class="header-title">OWASP TIET Student Chapter<br/>Recruitment 2026</h1>
+  <p class="header-desc">
+    Thank you for your interest in joining the OWASP TIET Student Chapter!<br/>
+    Please fill out the form below to apply.
+  </p>
+  <div class="header-badges">
+    <span class="badge badge-warning">⚡ Batch of 2029 Only</span>
+    <span class="badge badge-danger">🗓 Deadline: 20th July 2026</span>
+  </div>
+</header>
+
+<!-- ═══ PROGRESS ═══ -->
+<div class="progress-wrap" id="progress-wrap">
+  <div class="progress-meta">
+    <span class="progress-label" id="progress-label">Personal Info</span>
+    <span class="progress-count" id="progress-count">Step 1 of 3</span>
+  </div>
+  <div class="progress-track">
+    <div class="progress-fill" id="progress-fill" style="width:33.3%"></div>
+  </div>
+  <div class="step-dots" id="step-dots"></div>
+</div>
+
+<!-- ═══ FORM ═══ -->
+<div class="form-container" id="form-container">
+
+  <!-- ────────────────────────────────────────────────────
+       PAGE 1 · Personal Information
+  ──────────────────────────────────────────────────── -->
+  <div class="form-page active" id="page-1">
+
+    <div class="field-card" id="fc-email">
+      <label class="field-label" for="email">Email<span class="required-star">*</span></label>
+      <input type="email" id="email" name="email" placeholder="yourname@thapar.edu" autocomplete="email" />
+      <p class="field-hint">Must be your official @thapar.edu address</p>
+      <p class="error-msg">Please use your @thapar.edu email address.</p>
+    </div>
+
+    <div class="field-card" id="fc-name">
+      <label class="field-label" for="name">Name<span class="required-star">*</span></label>
+      <input type="text" id="name" name="name" placeholder="Full Name" autocomplete="name" />
+      <p class="error-msg">Name is required.</p>
+    </div>
+
+    <div class="field-card" id="fc-roll">
+      <label class="field-label" for="roll">Roll no.<span class="required-star">*</span></label>
+      <input type="text" id="roll" name="roll" placeholder="e.g. 102503001" maxlength="12" inputmode="numeric" />
+      <p class="error-msg">Roll number must be 9–12 digits (e.g. 102503001).</p>
+    </div>
+
+    <div class="field-card" id="fc-mobile">
+      <label class="field-label" for="mobile">Mobile no.<span class="required-star">*</span></label>
+      <input type="tel" id="mobile" name="mobile" placeholder="e.g. 9876543210" maxlength="10" inputmode="numeric" autocomplete="tel" />
+      <p class="error-msg">Mobile number must be exactly 10 digits.</p>
+    </div>
+
+    <div class="field-card" id="fc-branch">
+      <label class="field-label" for="branch">Branch<span class="required-star">*</span></label>
+      <input type="text" id="branch" name="branch" placeholder="e.g. Computer Engineering" />
+      <p class="error-msg">This field is required.</p>
+    </div>
+
+    <div class="field-card" id="fc-domain">
+      <label class="field-label">Domain Preference<span class="required-star">*</span></label>
+      <div class="choices" id="domain-choices">
+        <label class="choice-item">
+          <input type="radio" name="domain" value="cybersecurity" onchange="onDomainChange(this)" />
+          <span class="choice-label">🔐 Cybersecurity</span>
+        </label>
+        <label class="choice-item">
+          <input type="radio" name="domain" value="technical" onchange="onDomainChange(this)" />
+          <span class="choice-label">💻 Technical (Web/App/AI/ML/Robotics/IOT)</span>
+        </label>
+        <label class="choice-item">
+          <input type="radio" name="domain" value="media" onchange="onDomainChange(this)" />
+          <span class="choice-label">📸 Media</span>
+        </label>
+        <label class="choice-item">
+          <input type="radio" name="domain" value="designing" onchange="onDomainChange(this)" />
+          <span class="choice-label">🎨 Designing</span>
+        </label>
+        <label class="choice-item">
+          <input type="radio" name="domain" value="marketing" onchange="onDomainChange(this)" />
+          <span class="choice-label">📢 Marketing</span>
+        </label>
+        <label class="choice-item">
+          <input type="radio" name="domain" value="outreach" onchange="onDomainChange(this)" />
+          <span class="choice-label">🤝 Outreach</span>
+        </label>
+      </div>
+      <p class="error-msg">Please select a domain preference.</p>
+    </div>
+
+    <div class="btn-row">
+      <button class="btn btn-primary" onclick="goNext()">Continue &nbsp;→</button>
+    </div>
+  </div>
+
+  <!-- ────────────────────────────────────────────────────
+       PAGE 2 · Cybersecurity
+  ──────────────────────────────────────────────────── -->
+  <div class="form-page" id="page-2">
+    <div class="section-header">
+      <span class="section-icon">🔐</span>
+      <span class="section-title">Cybersecurity</span>
+    </div>
+
+    <div class="field-card" id="fc-cs-stack">
+      <label class="field-label" for="cs-stack">
+        Which cybersecurity platforms and tools do you use or are known to you. Share your experience where you used any one of them.<span class="required-star">*</span>
+      </label>
+      <textarea id="cs-stack" name="cs-stack" placeholder="e.g. TryHackMe, Burp Suite - used Burp Suite to test for XSS vulnerabilities"></textarea>
+      <p class="error-msg">This field is required.</p>
+    </div>
+
+    <div class="field-card" id="fc-cs-project">
+      <label class="field-label" for="cs-project">
+        Describe at least one cybersecurity project, lab, or room you've worked on. What problem did it solve and what did you personally learn?
+      <span class="required-star">*</span></label>
+      <textarea id="cs-project" name="cs-project" placeholder="e.g. Completed 'Blue' room on TryHackMe - exploited EternalBlue (MS17-010), learned SMB vulnerability basics"></textarea>
+      <p class="error-msg">This field is required.</p>
+    </div>
+
+    <div class="field-card" id="fc-cs-github">
+      <label class="field-label" for="cs-github">Share your GitHub profile link<span class="required-star">*</span></label>
+      <input type="text" id="cs-github" name="cs-github" placeholder="https://github.com/yourusername" autocomplete="off" />
+      <p class="field-hint">Must start with https://github.com/</p>
+      <p class="error-msg" id="err-cs-github">Enter a valid GitHub URL (e.g. https://github.com/yourusername).</p>
+    </div>
+
+    <div class="field-card">
+      <label class="field-label" for="cs-repo">Share your project repository of the above mentioned project</label>
+      <input type="url" id="cs-repo" name="cs-repo" placeholder="https://github.com/yourusername/project" />
+    </div>
+
+    <div class="field-card" id="fc-cs-ctf">
+      <label class="field-label" for="cs-ctf">
+        Describe one security challenge, vulnerability, or exploit that you found interesting or like solving in CTFs. Explain it in your own words.
+      <span class="required-star">*</span></label>
+      <textarea id="cs-ctf" name="cs-ctf" placeholder="e.g. SQL injection - a simple ' OR 1=1-- can bypass login by manipulating the query logic"></textarea>
+      <p class="error-msg">This field is required.</p>
+    </div>
+
+    <div class="field-card" id="fc-cs-ctf-count">
+      <label class="field-label" for="cs-ctf-count">How many CTF's have you participated in? (if any pls mention them)<span class="required-star">*</span></label>
+      <input type="text" id="cs-ctf-count" name="cs-ctf-count" placeholder="e.g. C3iHub IITK, HackThisSite, CTFtime..." />
+      <p class="error-msg">This field is required.</p>
+    </div>
+
+    <div class="field-card" id="fc-cs-website-check">
+      <label class="field-label" for="cs-website-check">
+        Suppose a friend asks you to secure a college event website. What are the first three things you would check?
+      <span class="required-star">*</span></label>
+      <textarea id="cs-website-check" name="cs-website-check" placeholder="Write your answer here..."></textarea>
+      <p class="error-msg">This field is required.</p>
+    </div>
+
+    <div class="field-card" id="fc-cs-learning">
+      <label class="field-label" for="cs-learning">
+        What cybersecurity topic are you currently learning? What do you plan to learn next?
+      <span class="required-star">*</span></label>
+      <textarea id="cs-learning" name="cs-learning" placeholder="e.g. Currently: PortSwigger Web Security Academy | Next: Binary exploitation"></textarea>
+      <p class="error-msg">This field is required.</p>
+    </div>
+
+    <div class="btn-row">
+      <button class="btn btn-ghost" onclick="goBack()">← Back</button>
+      <button class="btn btn-primary" onclick="goNext()">Continue &nbsp;→</button>
+    </div>
+  </div>
+
+  <!-- ────────────────────────────────────────────────────
+       PAGE 3 · Technical
+  ──────────────────────────────────────────────────── -->
+  <div class="form-page" id="page-3">
+    <div class="section-header">
+      <span class="section-icon">💻</span>
+      <span class="section-title">Technical</span>
+    </div>
+
+    <div class="field-card" id="fc-tech-stack">
+      <label class="field-label" for="tech-stack">
+        Which technology are you most comfortable building with, and what have you built using it?<span class="required-star">*</span>
+      </label>
+      <textarea id="tech-stack" name="tech-stack" placeholder="e.g. React.js - built a real-time to-do app with Firebase backend"></textarea>
+      <p class="error-msg">This field is required.</p>
+    </div>
+
+    <div class="field-card" id="fc-tech-project">
+      <label class="field-label" for="tech-project">
+        Describe one project you're most proud of. What was the biggest technical challenge and how did you solve it?
+      <span class="required-star">*</span></label>
+      <textarea id="tech-project" name="tech-project" placeholder="e.g. Campus event app - challenge was real-time seat booking, solved with Firebase transactions"></textarea>
+      <p class="error-msg">This field is required.</p>
+    </div>
+
+    <div class="field-card" id="fc-tech-github">
+      <label class="field-label" for="tech-github">Share your GitHub profile link<span class="required-star">*</span></label>
+      <input type="text" id="tech-github" name="tech-github" placeholder="https://github.com/yourusername" autocomplete="off" />
+      <p class="field-hint">Must start with https://github.com/</p>
+      <p class="error-msg" id="err-tech-github">Enter a valid GitHub URL (e.g. https://github.com/yourusername).</p>
+    </div>
+
+    <div class="field-card">
+      <label class="field-label" for="tech-repo">Share your project repository of the above mentioned project</label>
+      <input type="url" id="tech-repo" name="tech-repo" placeholder="https://github.com/yourusername/project" />
+    </div>
+
+    <div class="field-card" id="fc-tech-confidence">
+      <label class="field-label">
+        If we ask you to contribute to an existing GitHub repository next week, how confident are you?<span class="required-star">*</span>
+      </label>
+      <div class="choices" id="tech-confidence-choices">
+        <label class="choice-item">
+          <input type="radio" name="tech-confidence" value="Very confident" onchange="highlightChoice(this)" />
+          <span class="choice-label">🚀 Very confident</span>
+        </label>
+        <label class="choice-item">
+          <input type="radio" name="tech-confidence" value="Somewhat confident" onchange="highlightChoice(this)" />
+          <span class="choice-label">👍 Somewhat confident</span>
+        </label>
+        <label class="choice-item">
+          <input type="radio" name="tech-confidence" value="Need guidance but willing to learn" onchange="highlightChoice(this)" />
+          <span class="choice-label">🌱 Need guidance but willing to learn</span>
+        </label>
+      </div>
+      <p class="error-msg">Please select an option.</p>
+    </div>
+
+    <div class="btn-row">
+      <button class="btn btn-ghost" onclick="goBack()">← Back</button>
+      <button class="btn btn-primary" onclick="goNext()">Continue &nbsp;→</button>
+    </div>
+  </div>
+
+  <!-- ────────────────────────────────────────────────────
+       PAGE 4 · Design / Media
+  ──────────────────────────────────────────────────── -->
+  <div class="form-page" id="page-4">
+    <div class="section-header">
+      <span class="section-icon">🎨</span>
+      <span class="section-title">Design / Media</span>
+    </div>
+
+    <div class="field-card" id="fc-dm-tools">
+      <label class="field-label" for="dm-tools">
+        Which design software do you regularly use, and what type of work do you primarily create?<span class="required-star">*</span>
+      </label>
+      <textarea id="dm-tools" name="dm-tools" placeholder="e.g. Figma (UI/UX), Premiere Pro (video) - primarily create event posters and social media reels"></textarea>
+      <p class="error-msg">Please describe the tools you use and the type of work you create.</p>
+    </div>
+
+    <div class="field-card" id="fc-dm-portfolio">
+      <label class="field-label" for="dm-portfolio">
+        Share your best portfolio/project and tell us what role you played in creating it.
+      <span class="required-star">*</span></label>
+      <textarea id="dm-portfolio" name="dm-portfolio" placeholder="Portfolio: https://drive.google.com/... - Lead designer for college fest visual identity (logo, posters, social kit)"></textarea>
+      <p class="error-msg">This field is required.</p>
+    </div>
+
+    <div class="field-card">
+      <label class="field-label" for="dm-figma">Figma Link</label>
+      <input type="url" id="dm-figma" name="dm-figma" placeholder="https://figma.com/file/..." />
+    </div>
+
+    <div class="field-card" id="fc-dm-workshop">
+      <label class="field-label" for="dm-workshop">
+        Suppose we need to promote a cybersecurity workshop in 24 hours. How would you approach designing the promotional material?
+      <span class="required-star">*</span></label>
+      <textarea id="dm-workshop" name="dm-workshop" placeholder="Write your answer here..."></textarea>
+      <p class="error-msg">This field is required.</p>
+    </div>
+
+    <div class="btn-row">
+      <button class="btn btn-ghost" onclick="goBack()">← Back</button>
+      <button class="btn btn-primary" onclick="goNext()">Continue &nbsp;→</button>
+    </div>
+  </div>
+
+  <!-- ────────────────────────────────────────────────────
+       PAGE 5 · Marketing / Outreach
+  ──────────────────────────────────────────────────── -->
+  <div class="form-page" id="page-5">
+    <div class="section-header">
+      <span class="section-icon">📢</span>
+      <span class="section-title">Marketing / Outreach</span>
+    </div>
+
+    <div class="field-card" id="fc-mo-outreach">
+      <label class="field-label" for="mo-outreach">
+        Have you ever reached out to sponsors, speakers, communities, or organizations for an event? If yes, briefly explain your role.
+      <span class="required-star">*</span></label>
+      <textarea id="mo-outreach" name="mo-outreach" placeholder="Write your answer here..."></textarea>
+      <p class="error-msg">This field is required.</p>
+    </div>
+
+    <div class="field-card" id="fc-mo-campaign">
+      <label class="field-label" for="mo-campaign">
+        Describe one event, campaign, or initiative where you contributed to outreach or marketing. What was the outcome?
+      <span class="required-star">*</span></label>
+      <textarea id="mo-campaign" name="mo-campaign" placeholder="Write your answer here..."></textarea>
+      <p class="error-msg">This field is required.</p>
+    </div>
+
+    <div class="field-card" id="fc-mo-scenario">
+      <label class="field-label" for="mo-scenario">
+        Imagine registrations for an OWASP workshop are much lower than expected. What would you do over the next 3 days to improve participation?
+      <span class="required-star">*</span></label>
+      <textarea id="mo-scenario" name="mo-scenario" placeholder="Write your answer here..."></textarea>
+      <p class="error-msg">This field is required.</p>
+    </div>
+
+    <div class="btn-row">
+      <button class="btn btn-ghost" onclick="goBack()">← Back</button>
+      <button class="btn btn-primary" onclick="goNext()">Continue &nbsp;→</button>
+    </div>
+  </div>
+
+  <!-- ────────────────────────────────────────────────────
+       PAGE 6 · More About Yourself
+  ──────────────────────────────────────────────────── -->
+  <div class="form-page" id="page-6">
+    <div class="section-header">
+      <span class="section-icon">✨</span>
+      <span class="section-title">More About Yourself</span>
+    </div>
+
+    <div class="field-card" id="fc-societies">
+      <label class="field-label" for="societies">
+        List your current societies or major extracurricular commitments. Also mention your role (if any).<span class="required-star">*</span>
+      </label>
+      <textarea id="societies" name="societies" placeholder="e.g. ISTE — Member | E-Cell — Campus Ambassador | Or write 'None'"></textarea>
+      <p class="error-msg">This field is required.</p>
+    </div>
+
+    <div class="field-card" id="fc-why-owasp">
+      <label class="field-label" for="why-owasp">Why do you want to join OWASP<span class="required-star">*</span></label>
+      <textarea id="why-owasp" name="why-owasp" placeholder="Tell us what draws you to OWASP TIET and what you hope to contribute..."></textarea>
+      <p class="error-msg">Please tell us why you want to join.</p>
+    </div>
+
+    <div class="field-card" id="fc-extra-info">
+      <label class="field-label" for="extra-info">
+        Tell us something about yourself that isn't visible from your resume but you believe we should know.
+      <span class="required-star">*</span></label>
+      <textarea id="extra-info" name="extra-info" placeholder="e.g. Stayed up 48h to finish a CTF challenge - I learn best by doing and teaching"></textarea>
+      <p class="error-msg">This field is required.</p>
+    </div>
+
+    <div class="field-card" id="fc-owasp-goal">
+      <label class="field-label" for="owasp-goal">
+        If selected, what would you like to accomplish in OWASP during the next one year?
+      <span class="required-star">*</span></label>
+      <textarea id="owasp-goal" name="owasp-goal" placeholder="e.g. Organise a CTF event, contribute to technical content, help onboard the next batch"></textarea>
+      <p class="error-msg">This field is required.</p>
+    </div>
+
+    <!-- Send-copy toggle — default OFF -->
+    <div class="field-card">
+      <label class="field-label">Send me a copy of my responses</label>
+      <div class="toggle-row">
+        <label class="toggle-wrap">
+          <input type="checkbox" id="send-copy" />
+          <span class="toggle-slider"></span>
+        </label>
+        <span class="toggle-label">A copy of your filled responses will be emailed to your @thapar.edu address</span>
+      </div>
+    </div>
+
+    <div class="field-card" id="fc-resume">
+      <label class="field-label">Pls share your resume<span class="required-star">*</span></label>
+      <div class="file-zone" id="file-zone"
+           ondragover="handleDragOver(event)"
+           ondragleave="handleDragLeave(event)"
+           ondrop="handleDrop(event)">
+        <input type="file" id="resume" name="resume" accept=".pdf,.doc,.docx" onchange="handleFile(this)" />
+        <span class="file-icon">📄</span>
+        <span class="file-zone-label">Click to upload or drag & drop</span>
+        <span class="file-zone-hint">PDF, DOC, DOCX - Max 10 MB</span>
+        <span class="file-name" id="file-name-display"></span>
+      </div>
+      <p class="error-msg">Please upload your resume (PDF/DOC, max 10 MB).</p>
+    </div>
+
+    <div class="btn-row">
+      <button class="btn btn-ghost" onclick="goBack()">← Back</button>
+      <button class="btn btn-submit" id="submit-btn" onclick="submitForm()">
+        🚀 Submit Application
+      </button>
+    </div>
+  </div>
+
+</div><!-- /form-container -->
+
+<!-- ═══ SUCCESS ═══ -->
+<div id="success-page">
+  <div class="success-icon">✓</div>
+  <h2 class="success-title">Application Submitted!</h2>
+  <p class="success-desc">
+    Thank you for applying to the OWASP TIET Student Chapter.<br/>
+    We'll review your application and get back to you soon.<br/><br/>
+    <!-- Shown only when user had the send-copy toggle ON -->
+    <span id="email-sent-notice" style="display:none; color:var(--accent2); font-size:15px;">
+      📧 A copy of your response has been sent to your @thapar.edu email.<br/><br/>
+    </span>
+    <strong style="color: var(--accent2);">Stay sharp. Stay secure. 🔐</strong>
+  </p>
+</div>
+
+<!-- ═══ TOAST ═══ -->
+<div class="toast" id="toast"></div>
+
+<script>
+  // ─────────────────────────────────────────────────────────────────────
+  // ⚠️  Replace with your deployed Google Apps Script Web App URL.
+  //     See Code.gs for setup instructions.
+  // ─────────────────────────────────────────────────────────────────────
+  const APPS_SCRIPT_URL = 'YOUR_APPS_SCRIPT_WEB_APP_URL_HERE';
+
+  // ─── STATE ───────────────────────────────────────────────────────────
+  let currentPage    = 1;
+  let selectedDomain = null;
+
+  const PAGE_LABELS = {
+    1: 'Personal Info',
+    2: 'Cybersecurity',
+    3: 'Technical',
+    4: 'Design / Media',
+    5: 'Marketing / Outreach',
+    6: 'More About Yourself'
+  };
+
+  const DOMAIN_PAGE = {
+    cybersecurity: 2,
+    technical:     3,
+    media:         4,
+    designing:     4,
+    marketing:     5,
+    outreach:      5
+  };
+
+  // ─── INIT ────────────────────────────────────────────────────────────
+  function initDots() {
+    const wrap = document.getElementById('step-dots');
+    wrap.innerHTML = '';
+    for (let i = 1; i <= 3; i++) {
+      const d = document.createElement('div');
+      d.className = 'step-dot' + (i === 1 ? ' active' : '');
+      d.id = 'dot-' + i;
+      wrap.appendChild(d);
+    }
+  }
+
+  function updateProgress(step, total) {
+    const pct = (step / total) * 100;
+    document.getElementById('progress-fill').style.width = pct + '%';
+    document.getElementById('progress-label').textContent = PAGE_LABELS[currentPage] || '';
+    document.getElementById('progress-count').textContent = `Step ${step} of ${total}`;
+    document.querySelectorAll('.step-dot').forEach((d, i) => {
+      const n = i + 1;
+      d.classList.remove('active', 'done');
+      if (n < step)  d.classList.add('done');
+      if (n === step) d.classList.add('active');
+    });
+  }
+
+  // ─── NAVIGATION ──────────────────────────────────────────────────────
+  function showPage(n) {
+    document.querySelectorAll('.form-page').forEach(p => p.classList.remove('active'));
+    document.getElementById('page-' + n).classList.add('active');
+    currentPage = n;
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    const step = n === 1 ? 1 : n <= 5 ? 2 : 3;
+    updateProgress(step, 3);
+  }
+
+  function goNext() {
+    if (!validatePage(currentPage)) return;
+    if      (currentPage === 1)              showPage(DOMAIN_PAGE[selectedDomain]);
+    else if (currentPage >= 2 && currentPage <= 5) showPage(6);
+  }
+
+  function goBack() {
+    if      (currentPage === 6)              showPage(DOMAIN_PAGE[selectedDomain]);
+    else if (currentPage >= 2 && currentPage <= 5) showPage(1);
+  }
+
+  // ─── DOMAIN + CHOICE HELPERS ─────────────────────────────────────────
+  function onDomainChange(radio) {
+    selectedDomain = radio.value;
+    document.querySelectorAll('#domain-choices .choice-item').forEach(ci => ci.classList.remove('selected'));
+    radio.closest('.choice-item').classList.add('selected');
+    document.getElementById('fc-domain').classList.remove('error');
+  }
+
+  function highlightChoice(radio) {
+    radio.closest('.choices').querySelectorAll('.choice-item').forEach(ci => ci.classList.remove('selected'));
+    radio.closest('.choice-item').classList.add('selected');
+  }
+
+  // ─── VALIDATION ──────────────────────────────────────────────────────
+  function setError(id, hasError) {
+    const el = document.getElementById(id);
+    if (el) el.classList.toggle('error', hasError);
+  }
+
+  function validatePage(n) {
+    let ok = true;
+
+    if (n === 1) {
+      const email  = document.getElementById('email').value.trim();
+      const name   = document.getElementById('name').value.trim();
+      const roll   = document.getElementById('roll').value.trim();
+      const mobile = document.getElementById('mobile').value.trim();
+      const branch = document.getElementById('branch').value.trim();
+
+      const emailOk  = /^[^\s@]+@thapar\.edu$/i.test(email);   // must be @thapar.edu
+      const rollOk   = /^\d{9,12}$/.test(roll);                // 9–12 digits
+      const mobileOk = /^\d{10}$/.test(mobile);                // exactly 10 digits
+
+      setError('fc-email',  !emailOk);
+      setError('fc-name',   !name);
+      setError('fc-roll',   !rollOk);
+      setError('fc-mobile', !mobileOk);
+      setError('fc-branch', !branch);
+      setError('fc-domain', !selectedDomain);
+
+      if (!emailOk || !name || !rollOk || !mobileOk || !branch || !selectedDomain) ok = false;
+    }
+
+    if (n === 2) {
+      const stack = document.getElementById('cs-stack').value.trim();
+      const project = document.getElementById('cs-project').value.trim();
+      const github = document.getElementById('cs-github').value.trim();
+      const ctf = document.getElementById('cs-ctf').value.trim();
+      const ctfCount = document.getElementById('cs-ctf-count').value.trim();
+      const websiteCheck = document.getElementById('cs-website-check').value.trim();
+      const learning = document.getElementById('cs-learning').value.trim();
+
+      // GitHub must start with https://github.com/
+      const githubOk = github.startsWith('https://github.com/');
+
+      setError('fc-cs-stack', !stack);
+      setError('fc-cs-project', !project);
+      setError('fc-cs-github', !github || !githubOk);
+      setError('fc-cs-ctf', !ctf);
+      setError('fc-cs-ctf-count', !ctfCount);
+      setError('fc-cs-website-check', !websiteCheck);
+      setError('fc-cs-learning', !learning);
+
+      if (!stack || !project || !github || !githubOk || !ctf || !ctfCount || !websiteCheck || !learning) ok = false;
+    }
+
+    if (n === 3) {
+      const stack = document.getElementById('tech-stack').value.trim();
+      const project = document.getElementById('tech-project').value.trim();
+      const github = document.getElementById('tech-github').value.trim();
+      const confidence = document.querySelector('input[name="tech-confidence"]:checked');
+
+      // GitHub must start with https://github.com/
+      const githubOk = github.startsWith('https://github.com/');
+
+      setError('fc-tech-stack', !stack);
+      setError('fc-tech-project', !project);
+      setError('fc-tech-github', !github || !githubOk);
+      setError('fc-tech-confidence', !confidence);
+
+      if (!stack || !project || !github || !githubOk || !confidence) ok = false;
+    }
+
+    if (n === 4) {
+      const tools = document.getElementById('dm-tools').value.trim();
+      const portfolio = document.getElementById('dm-portfolio').value.trim();
+      const workshop = document.getElementById('dm-workshop').value.trim();
+
+      setError('fc-dm-tools', !tools);
+      setError('fc-dm-portfolio', !portfolio);
+      setError('fc-dm-workshop', !workshop);
+
+      if (!tools || !portfolio || !workshop) ok = false;
+    }
+
+    if (n === 5) {
+      const outreach = document.getElementById('mo-outreach').value.trim();
+      const campaign = document.getElementById('mo-campaign').value.trim();
+      const scenario = document.getElementById('mo-scenario').value.trim();
+
+      setError('fc-mo-outreach', !outreach);
+      setError('fc-mo-campaign', !campaign);
+      setError('fc-mo-scenario', !scenario);
+
+      if (!outreach || !campaign || !scenario) ok = false;
+    }
+
+    if (n === 6) {
+      const soc  = document.getElementById('societies').value.trim();
+      const why  = document.getElementById('why-owasp').value.trim();
+      const extraInfo = document.getElementById('extra-info').value.trim();
+      const owaspGoal = document.getElementById('owasp-goal').value.trim();
+      const file = document.getElementById('resume').files.length > 0;
+
+      setError('fc-societies', !soc);
+      setError('fc-why-owasp', !why);
+      setError('fc-extra-info', !extraInfo);
+      setError('fc-owasp-goal', !owaspGoal);
+      setError('fc-resume',    !file);
+
+      if (!soc || !why || !extraInfo || !owaspGoal || !file) ok = false;
+    }
+
+    if (!ok) {
+      const first = document.querySelector('.form-page.active .field-card.error');
+      if (first) first.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+    return ok;
+  }
+
+  // ─── FILE UPLOAD ─────────────────────────────────────────────────────
+  function handleFile(input) {
+    const file = input.files[0];
+    if (!file) return;
+    if (file.size > 10 * 1024 * 1024) {
+      showToast('File size exceeds 10 MB. Please choose a smaller file.', 'error');
+      input.value = '';
+      return;
+    }
+    const display = document.getElementById('file-name-display');
+    display.textContent = '✅ ' + file.name;
+    display.style.display = 'block';
+    document.getElementById('fc-resume').classList.remove('error');
+  }
+
+  function handleDragOver(e) { e.preventDefault(); document.getElementById('file-zone').classList.add('dragover'); }
+  function handleDragLeave()  { document.getElementById('file-zone').classList.remove('dragover'); }
+  function handleDrop(e) {
+    e.preventDefault();
+    document.getElementById('file-zone').classList.remove('dragover');
+    const file = e.dataTransfer.files[0];
+    if (file) {
+      const dt = new DataTransfer();
+      dt.items.add(file);
+      const inp = document.getElementById('resume');
+      inp.files = dt.files;
+      handleFile(inp);
+    }
+  }
+
+  // ─── HELPERS ─────────────────────────────────────────────────────────
+  function fileToBase64(file) {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload  = () => resolve(reader.result.split(',')[1]);
+      reader.onerror = reject;
+      reader.readAsDataURL(file);
+    });
+  }
+
+  function showToast(msg, type = 'error') {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.className = 'toast' + (type === 'success' ? ' success-toast' : '');
+    t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 4500);
+  }
+
+  // ─── SUBMIT ──────────────────────────────────────────────────────────
+  async function submitForm() {
+    if (!validatePage(6)) return;
+
+    const btn = document.getElementById('submit-btn');
+    btn.disabled  = true;
+    btn.innerHTML = '<span class="spinner"></span> Submitting…';
+
+    try {
+      const fileInput = document.getElementById('resume');
+      const file      = fileInput.files[0];
+      const base64    = await fileToBase64(file);
+
+      // Get original file extension so Drive file is named correctly
+      const ext = file.name.split('.').pop().toLowerCase() || 'pdf';
+
+      // ── Build domain-specific fields ──
+      let csStack = '', csProject = '', csGithub = '', csRepo = '',
+          csCtf = '', csCtfCount = '', csWebsiteCheck = '', csLearning = '';
+      let techStack = '', techProject = '', techGithub = '', techRepo = '',
+          techConfidence = '';
+      let dmTools = '', dmPortfolio = '', dmFigma = '', dmWorkshop = '';
+      let moOutreach = '', moCampaign = '', moScenario = '';
+
+      if (selectedDomain === 'cybersecurity') {
+        csStack         = document.getElementById('cs-stack').value.trim();
+        csProject       = document.getElementById('cs-project').value.trim();
+        csGithub        = document.getElementById('cs-github').value.trim();
+        csRepo          = document.getElementById('cs-repo').value.trim();
+        csCtf           = document.getElementById('cs-ctf').value.trim();
+        csCtfCount      = document.getElementById('cs-ctf-count').value.trim();
+        csWebsiteCheck  = document.getElementById('cs-website-check').value.trim();
+        csLearning      = document.getElementById('cs-learning').value.trim();
+
+      } else if (selectedDomain === 'technical') {
+        techStack      = document.getElementById('tech-stack').value.trim();
+        techProject    = document.getElementById('tech-project').value.trim();
+        techGithub     = document.getElementById('tech-github').value.trim();
+        techRepo       = document.getElementById('tech-repo').value.trim();
+        const confRadio = document.querySelector('input[name="tech-confidence"]:checked');
+        techConfidence = confRadio ? confRadio.value : '';
+
+      } else if (selectedDomain === 'media' || selectedDomain === 'designing') {
+        dmTools         = document.getElementById('dm-tools').value.trim();
+        dmPortfolio     = document.getElementById('dm-portfolio').value.trim();
+        dmFigma         = document.getElementById('dm-figma').value.trim();
+        dmWorkshop      = document.getElementById('dm-workshop').value.trim();
+
+      } else if (selectedDomain === 'marketing' || selectedDomain === 'outreach') {
+        moOutreach      = document.getElementById('mo-outreach').value.trim();
+        moCampaign      = document.getElementById('mo-campaign').value.trim();
+        moScenario      = document.getElementById('mo-scenario').value.trim();
+      }
+
+      const applicantName = document.getElementById('name').value.trim();
+
+      const societies = document.getElementById('societies').value.trim();
+      const whyOwasp  = document.getElementById('why-owasp').value.trim();
+      const extraInfo = document.getElementById('extra-info').value.trim();
+      const owaspGoal = document.getElementById('owasp-goal').value.trim();
+      const sendCopy  = document.getElementById('send-copy').checked;
+
+      const payload = {
+        email:           document.getElementById('email').value.trim(),
+        name:            applicantName,
+        roll:            document.getElementById('roll').value.trim(),
+        mobile:          document.getElementById('mobile').value.trim(),
+        branch:          document.getElementById('branch').value.trim(),
+        domain:          selectedDomain,
+        // Cybersecurity
+        csStack, csProject, csGithub, csRepo, csCtf, csCtfCount, csWebsiteCheck, csLearning,
+        // Technical
+        techStack, techProject, techGithub, techRepo, techConfidence,
+        // Design/Media
+        dmTools, dmPortfolio, dmFigma, dmWorkshop,
+        // Marketing/Outreach
+        moOutreach, moCampaign, moScenario,
+        // Common
+        societies, whyOwasp, extraInfo, owaspGoal,
+        // Options
+        sendCopy,
+        // Resume
+        resumeExt:      ext,
+        resumeMimeType: file.type || 'application/octet-stream',
+        resumeBase64:   base64,
+      };
+
+      // POST — use text/plain to avoid CORS preflight (Apps Script doesn't handle OPTIONS)
+      const res = await fetch(APPS_SCRIPT_URL, {
+        method:   'POST',
+        redirect: 'follow',
+        headers:  { 'Content-Type': 'text/plain;charset=UTF-8' },
+        body:     JSON.stringify(payload),
+      });
+
+      const json = await res.json();
+      if (!json.success) throw new Error(json.error || 'Server error');
+
+      // ── Success ──
+      document.getElementById('progress-wrap').style.display  = 'none';
+      document.getElementById('form-container').style.display = 'none';
+      document.getElementById('success-page').style.display   = 'block';
+      // Show email-sent notice only when user opted in
+      document.getElementById('email-sent-notice').style.display = sendCopy ? 'inline' : 'none';
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+
+    } catch (err) {
+      console.error(err);
+      showToast('Submission failed: ' + err.message + '. Please try again.', 'error');
+      btn.disabled  = false;
+      btn.innerHTML = '🚀 Submit Application';
+    }
+  }
+
+  // ─── BOOT ────────────────────────────────────────────────────────────
+  initDots();
+  updateProgress(1, 3);
+</script>
+</body>
+</html>

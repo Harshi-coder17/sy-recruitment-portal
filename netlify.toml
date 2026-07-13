@@ -1,0 +1,31 @@
+[build]
+  publish = "."
+  # No build step needed — pure static HTML
+
+# Custom Netlify site name: sy-recruitment
+# When deploying via Netlify UI, set site name to "sy-recruitment"
+# (Site Settings → General → Site name)
+
+[[headers]]
+  for = "/*"
+  [headers.values]
+    # Clickjacking prevention
+    X-Frame-Options = "DENY"
+
+    # MIME-type sniffing prevention
+    X-Content-Type-Options = "nosniff"
+
+    # Restrict referrer info sent to third parties
+    Referrer-Policy = "strict-origin-when-cross-origin"
+
+    # Permissions Policy — disable sensors/features the form doesn't need
+    Permissions-Policy = "geolocation=(), microphone=(), camera=(), payment=()"
+
+    # Content Security Policy (M3 security fix)
+    # - script-src 'unsafe-inline': required because all JS is inline (no external .js file)
+    # - style-src 'unsafe-inline': required for inline <style> block
+    # - connect-src: only the Google Apps Script endpoint
+    # - font-src: Google Fonts file server
+    # - img-src: local images + base64 data URIs
+    # - frame-ancestors 'none': blocks embedding in iframes (stronger than X-Frame-Options)
+    Content-Security-Policy = "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data:; connect-src https://script.google.com; frame-ancestors 'none'; base-uri 'self'; form-action 'none'"
