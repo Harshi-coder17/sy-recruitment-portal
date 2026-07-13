@@ -1065,6 +1065,9 @@
       const json = await res.json();
       if (!json.success) throw new Error(json.error || 'Server error');
 
+      // Log email status to console for debugging (open DevTools → Console)
+      console.log('[OWASP Form] Submission OK. emailStatus =', json.emailStatus || 'n/a');
+
       // ── Success ──
       document.getElementById('progress-wrap').style.display  = 'none';
       document.getElementById('form-container').style.display = 'none';
