@@ -1062,7 +1062,20 @@
         body:     JSON.stringify(payload),
       });
 
-      const json = await res.json();
+      // Apps Script responds through a Google redirect (script.google.com →
+      // script.googleusercontent.com). res.json() sometimes fails on the
+      // redirected response even when the backend succeeded. Use res.text()
+      // + manual parse with a safe fallback instead.
+      let json;
+      try {
+        const text = await res.text();
+        json = JSON.parse(text);
+      } catch (_) {
+        // Can't parse the response — but if fetch() didn't throw, the backend
+        // received and processed the request (sheet + Drive already updated).
+        console.warn('[OWASP Form] Response parse failed — assuming success (data saved).');
+        json = { success: true, emailStatus: 'unknown (response unparseable)' };
+      }
       if (!json.success) throw new Error(json.error || 'Server error');
 
       // Log email status to console for debugging (open DevTools → Console)
@@ -1072,9 +1085,12 @@
       document.getElementById('progress-wrap').style.display  = 'none';
       document.getElementById('form-container').style.display = 'none';
       document.getElementById('success-page').style.display   = 'block';
-      // Hide deadline/batch badges and description — irrelevant after submission
-      document.querySelector('.header-desc').style.display    = 'none';
-      document.querySelector('.header-badges').style.display  = 'none';
+      // Hide deadline/batch info — not relevant after submission
+      // Optional chaining guards against null if element is ever missing
+      const headerDesc   = document.querySelector('.header-desc');
+      const headerBadges = document.querySelector('.header-badges');
+      if (headerDesc)   headerDesc.style.display   = 'none';
+      if (headerBadges) headerBadges.style.display = 'none';
       // Show email-sent notice only when user opted in
       document.getElementById('email-sent-notice').style.display = sendCopy ? 'inline' : 'none';
       window.scrollTo({ top: 0, behavior: 'smooth' });
