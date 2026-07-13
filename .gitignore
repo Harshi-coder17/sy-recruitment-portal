@@ -16,3 +16,6 @@
 # Environment / secrets
 .env
 .env.local
+
+#Email Template and Scripts
+Code.gs
