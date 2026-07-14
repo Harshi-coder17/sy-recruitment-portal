@@ -82,9 +82,15 @@
     }
     .header-desc { font-size: 15px; color: var(--label); line-height: 1.7; max-width: 540px; margin: 0 auto 12px; }
     .header-badges { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; margin-top: 16px; }
-    .badge { display: inline-flex; align-items: center; gap: 6px; padding: 6px 14px; border-radius: 999px; font-size: 13px; font-weight: 600; border: 1px solid; }
-    .badge-warning { background: rgba(234,179,8,0.1);  border-color: rgba(234,179,8,0.4);  color: #fbbf24; }
-    .badge-danger  { background: rgba(239,68,68,0.1);  border-color: rgba(239,68,68,0.4);  color: #f87171; }
+    .badge { 
+      display: inline-flex; align-items: center; gap: 8px; padding: 8px 20px; border-radius: 999px; 
+      font-size: 14px; font-weight: 700; border: 1.5px solid; backdrop-filter: blur(20px);
+      box-shadow: 0 8px 24px rgba(0,0,0,0.5); transition: transform 0.3s ease, box-shadow 0.3s ease;
+      letter-spacing: 0.5px;
+    }
+    .badge:hover { transform: translateY(-3px); box-shadow: 0 12px 28px rgba(0,0,0,0.7); }
+    .badge-purple { background: rgba(124,107,255,0.1); border-color: rgba(124,107,255,0.5); color: #a79aff; box-shadow: 0 0 20px rgba(124,107,255,0.2), inset 0 0 15px rgba(124,107,255,0.1); }
+    .badge-cyan  { background: rgba(6,182,212,0.1); border-color: rgba(6,182,212,0.5); color: #67e8f9; box-shadow: 0 0 20px rgba(6,182,212,0.2), inset 0 0 15px rgba(6,182,212,0.1); }
 
     /* ─── PROGRESS ─── */
     .progress-wrap { width: 100%; max-width: 680px; margin: 36px 0 28px; }
@@ -115,7 +121,8 @@
 
     /* ─── FIELD CARD ─── */
     .field-card {
-      background: var(--card); border: 1px solid var(--border);
+      background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
       border-radius: var(--radius); padding: 24px; margin-bottom: 14px;
       transition: border-color var(--transition), box-shadow var(--transition); position: relative;
     }
@@ -147,27 +154,29 @@
     textarea { min-height: 90px; line-height: 1.6; }
 
     /* ─── RADIO CHOICES ─── */
-    .choices { display: flex; flex-direction: column; gap: 10px; }
+    .choices { display: flex; flex-direction: column; gap: 12px; }
     .choice-item {
       display: flex; align-items: center; gap: 14px; padding: 14px 18px;
-      background: var(--surface); border: 1px solid var(--border-hi);
+      background: rgba(22, 22, 31, 0.4); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+      border: 1px solid var(--border-hi);
       border-radius: var(--radius-sm); cursor: pointer;
       transition: border-color var(--transition), background var(--transition), transform var(--transition);
       user-select: none; position: relative;
     }
-    .choice-item:hover { border-color: var(--accent); background: rgba(91,75,220,0.08); transform: translateX(3px); }
+    .choice-item:hover { border-color: var(--accent); background: rgba(91,75,220,0.15); transform: translateX(3px); }
     .choice-item input[type="radio"] { width: 20px; height: 20px; accent-color: var(--accent2); cursor: pointer; flex-shrink: 0; }
-    .choice-item.selected { border-color: var(--accent2); background: rgba(91,75,220,0.15); }
+    .choice-item.selected { border-color: var(--accent2); background: rgba(91,75,220,0.25); box-shadow: 0 4px 12px rgba(0,0,0,0.2); }
     .choice-item.selected::after { content:''; position:absolute; left:0; top:0; bottom:0; width:3px; background:var(--accent2); border-radius:var(--radius-sm) 0 0 var(--radius-sm); }
     .choice-label { font-size: 15px; font-weight: 500; color: var(--text); }
 
     /* ─── FILE UPLOAD ─── */
     .file-zone {
+      background: rgba(22, 22, 31, 0.4); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
       border: 2px dashed var(--border-hi); border-radius: var(--radius-sm);
       padding: 36px 24px; text-align: center; cursor: pointer;
       transition: border-color var(--transition), background var(--transition); position: relative;
     }
-    .file-zone:hover, .file-zone.dragover { border-color: var(--accent2); background: rgba(91,75,220,0.08); }
+    .file-zone:hover, .file-zone.dragover { border-color: var(--accent2); background: rgba(91,75,220,0.15); }
     .file-zone input[type="file"] { position:absolute; inset:0; opacity:0; cursor:pointer; width:100%; height:100%; }
     .file-icon       { font-size: 36px; margin-bottom: 12px; display: block; }
     .file-zone-label { font-size: 15px; font-weight: 600; color: var(--accent2); display: block; margin-bottom: 6px; }
@@ -292,15 +301,221 @@
     ::-webkit-scrollbar { width:6px; }
     ::-webkit-scrollbar-track { background:var(--bg); }
     ::-webkit-scrollbar-thumb { background:var(--border-hi); border-radius:3px; }
+
+    /* ─── LANDING OVERLAY (PREMIUM RE-DESIGN) ─── */
+    body.landing-active { overflow-x: hidden; background: #050505; padding: 0; margin: 0; }
+    
+    #site-background {
+      position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+      background: transparent; z-index: -1; pointer-events: none;
+    }
+    #landing-wrapper {
+      position: absolute; top: 0; left: 0; width: 100vw; min-height: 200vh;
+      z-index: 99999;
+      color: #0f0; overflow-x: hidden;
+      perspective: 1000px;
+    }
+    #landing-wrapper.fade-out {
+      opacity: 0; pointer-events: none; transition: opacity 0.8s ease;
+    }
+    
+    /* 3D Floor Grid */
+    .bg-grid {
+      position: absolute; bottom: -50%; left: -50%; width: 200%; height: 200%;
+      background-image: 
+        linear-gradient(rgba(34, 197, 94, 0.15) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(34, 197, 94, 0.15) 1px, transparent 1px);
+      background-size: 60px 60px;
+      transform: perspective(600px) rotateX(75deg);
+      animation: gridMove 3s linear infinite;
+    }
+    .bg-grid-fade {
+      position: absolute; bottom: 0; left: 0; width: 100%; height: 100vh;
+      background: linear-gradient(to top, transparent, #050505 80%);
+    }
+    @keyframes gridMove {
+      from { transform: perspective(600px) rotateX(75deg) translateY(0); }
+      to { transform: perspective(600px) rotateX(75deg) translateY(60px); }
+    }
+    
+    #landing-canvas {
+      position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+    }
+    
+    .landing-section {
+      position: relative; z-index: 10; width: 100vw; height: 100vh;
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      transform-style: preserve-3d; transition: transform 0.1s;
+    }
+
+    #owasp-logo-container {
+      transition: opacity 0.8s ease, transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    .scroll-prompt {
+      position: absolute; bottom: 40px; left: 50%; transform: translateX(-50%);
+      font-family: 'Space Grotesk', sans-serif; font-size: 14px; letter-spacing: 2px;
+      color: var(--label); text-transform: uppercase;
+      animation: bounce 2s infinite; opacity: 0; transition: opacity 1s ease;
+      z-index: 50; pointer-events: none;
+    }
+    .scroll-prompt.show { opacity: 1; }
+    @keyframes bounce { 0%, 20%, 50%, 80%, 100% {transform: translate(-50%, 0);} 40% {transform: translate(-50%, -10px);} 60% {transform: translate(-50%, -5px);} }
+
+    /* Terminal Window */
+    .terminal-window {
+      width: 90%; max-width: 650px;
+      background: rgba(10,10,15,0.6); backdrop-filter: blur(15px);
+      border: 1px solid rgba(255,255,255,0.1); border-radius: 12px;
+      box-shadow: 0 20px 50px rgba(0,0,0,0.5), inset 0 0 0 1px rgba(255,255,255,0.05);
+      overflow: hidden; margin-top: 5vh; font-family: monospace;
+    }
+    .terminal-header {
+      background: rgba(255,255,255,0.03); padding: 12px 16px;
+      display: flex; gap: 8px; border-bottom: 1px solid rgba(255,255,255,0.05);
+    }
+    .terminal-dot { width: 12px; height: 12px; border-radius: 50%; }
+    .dot-r { background: #ef4444; } .dot-y { background: #eab308; } .dot-g { background: #22c55e; }
+    .terminal-body { padding: 24px; height: 260px; overflow: hidden; position: relative; }
+    
+    #code-typing {
+      text-align: left; font-size: 15px; color: var(--green); opacity: 0.9;
+      white-space: pre-wrap; line-height: 1.6; text-shadow: 0 0 8px rgba(34,197,94,0.6);
+    }
+    #code-typing::after {
+      content: '█'; animation: blink 1s step-end infinite; color: var(--green);
+    }
+    @keyframes blink { 50% { opacity: 0; } }
+
+    /* Minimalist HUD */
+    #hud-container {
+      margin-top: 40px; position: relative; width: 140px; height: 140px;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .hud-svg { position: absolute; inset: 0; width: 100%; height: 100%; transform: rotate(-90deg); }
+    .hud-circle-bg { fill: none; stroke: rgba(255,255,255,0.05); stroke-width: 2; }
+    .hud-circle-progress {
+      fill: none; stroke: var(--green); stroke-width: 2;
+      stroke-dasharray: 283; stroke-dashoffset: 283;
+      transition: stroke-dashoffset 0.1s linear; filter: drop-shadow(0 0 6px var(--green));
+    }
+    #hud-counter { font-family: 'Space Grotesk', sans-serif; font-size: 28px; font-weight: 700; color: #fff; text-shadow: 0 0 10px rgba(255,255,255,0.5); }
+
+    /* Content Card Section 2 */
+    .content-card {
+      background: rgba(10,10,15,0.5); backdrop-filter: blur(24px);
+      border: 1px solid rgba(255,255,255,0.08); padding: 60px 40px;
+      border-radius: 24px; text-align: center; max-width: 700px; width: 90%;
+      box-shadow: 0 30px 60px rgba(0,0,0,0.6), inset 0 0 0 1px rgba(255,255,255,0.05);
+      z-index: 20;
+    }
+    .badge-pill {
+      display: inline-block; padding: 6px 16px; border-radius: 999px;
+      background: rgba(91,75,220,0.15); color: var(--accent2);
+      font-size: 13px; font-weight: 600; letter-spacing: 1px; margin-bottom: 24px;
+      border: 1px solid rgba(91,75,220,0.3); font-family: 'Inter', sans-serif;
+    }
+    .scramble-title {
+      font-family: 'Space Grotesk', sans-serif; font-size: clamp(32px, 6vw, 56px);
+      font-weight: 800; color: #fff; margin-bottom: 24px; min-height: 70px;
+    }
+    .scramble-title .dud { color: var(--green); opacity: 0.7; }
+    .subtitle {
+      color: var(--label); font-size: 16px; line-height: 1.6; margin-bottom: 40px;
+      max-width: 500px; margin-inline: auto; font-family: 'Inter', sans-serif;
+    }
+
+    /* Star Border Button (ReactBits inspired) */
+    .star-border-btn {
+      position: relative; padding: 1px; border-radius: 999px;
+      background: rgba(255,255,255,0.1); overflow: hidden;
+      cursor: pointer; display: inline-block; transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .star-border-btn:hover { transform: scale(1.05); }
+    .star-border-btn::before {
+      content: ''; position: absolute; top: 50%; left: 50%; width: 300%; height: 300%;
+      background: conic-gradient(from 0deg, transparent 0%, transparent 80%, rgba(91,75,220,1) 90%, rgba(34,197,94,1) 100%);
+      transform: translate(-50%, -50%); animation: spinBorder 3s linear infinite;
+    }
+    .star-border-inner {
+      position: relative; background: #0a0a0f; padding: 16px 48px; border-radius: 999px;
+      color: #fff; font-family: 'Space Grotesk', sans-serif; font-size: 18px; font-weight: 700;
+      letter-spacing: 2px; display: flex; align-items: center; gap: 10px; z-index: 2;
+    }
+    @keyframes spinBorder {
+      from { transform: translate(-50%, -50%) rotate(0deg); }
+      to { transform: translate(-50%, -50%) rotate(360deg); }
+    }
   </style>
+  <script src="https://unpkg.com/@phosphor-icons/web"></script>
 </head>
-<body>
+<body class="landing-active">
+
+<!-- ═══ GLOBAL BACKGROUND ═══ -->
+<div id="site-background">
+  <div class="bg-grid"></div>
+  <div class="bg-grid-fade"></div>
+  <canvas id="landing-canvas"></canvas>
+</div>
+
+<!-- ═══ LANDING PAGE ═══ -->
+<div id="landing-wrapper">
+  
+  <section class="landing-section" id="section-1">
+    <div class="terminal-window" id="terminal-window">
+      <div class="terminal-header">
+        <div class="terminal-dot dot-r"></div>
+        <div class="terminal-dot dot-y"></div>
+        <div class="terminal-dot dot-g"></div>
+      </div>
+      <div class="terminal-body">
+        <div id="code-typing"></div>
+      </div>
+    </div>
+    
+    <div id="hud-container">
+      <div class="hud-counter" id="hud-counter">00%</div>
+      <svg class="hud-svg" viewBox="0 0 100 100">
+        <circle class="hud-circle-bg" cx="50" cy="50" r="45"></circle>
+        <circle class="hud-circle-progress" cx="50" cy="50" r="45"></circle>
+      </svg>
+    </div>
+
+    <div id="owasp-logo-container" style="display: none; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(1); z-index: 999; cursor: grab; width: clamp(150px, 30vw, 300px); height: auto; align-items: center; justify-content: center; touch-action: none; opacity: 0; -webkit-tap-highlight-color: transparent; outline: none; user-select: none;">
+      <img src="./logo.svg" alt="OWASP Logo" style="width: 100%; height: auto; object-fit: contain; pointer-events: none; -webkit-user-drag: none; user-drag: none; filter: invert(1) drop-shadow(0 0 20px rgba(91,75,220,1)) drop-shadow(0 0 60px rgba(91,75,220,0.9));">
+    </div>
+
+    <div class="scroll-prompt" id="scroll-prompt">System Ready // Scroll Down &darr;</div>
+  </section>
+
+  <section class="landing-section" id="section-2" style="padding: 0 20px;">
+    <div class="intro-content" style="text-align: center; display: flex; flex-direction: column; align-items: center; gap: 20px;">
+      <div class="badge-pill" style="margin-bottom: 0;">OWASP TIET CHAPTER</div>
+      <h1 class="scramble-title" id="scramble-text" style="font-size: clamp(40px, 8vw, 80px); font-weight: 800; letter-spacing: -2px; margin: 0; text-transform: uppercase;"></h1>
+      <p class="subtitle" style="font-family: 'Inter', sans-serif; font-size: 22px; line-height: 1.6; color: #d4d4d8; max-width: 700px; margin: 0;">
+        Are you ready to dive into the world of cyber security? We are looking for passionate individuals to join the vanguard of technical innovation.
+      </p>
+      <p class="subtitle" style="font-family: 'Space Grotesk', monospace; font-size: 18px; color: var(--green); margin: 0 0 40px 0;">
+        > TASK: Catch the initialization module to gain access.
+      </p>
+    </div>
+      
+    <div class="star-border-btn" id="enter-btn" style="transition: transform 0.2s ease; z-index: 100;">
+      <div class="star-border-inner">
+        INITIALIZE &raquo;
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- ═══ MAIN FORM (HIDDEN INITIALLY) ═══ -->
+<div id="main-form-content" style="display: none; opacity: 0; transition: opacity 1s; width: 100%; max-width: 680px; margin: 0 auto; display: flex; flex-direction: column; align-items: center;">
 
 <!-- ═══ HEADER ═══ -->
 <header class="form-header">
   <!-- Original black OWASP logo preserved; neon purple drop-shadow for visibility -->
   <div class="logo-card">
-    <img src="logo.png" alt="OWASP TIET Logo" class="logo-img" />
+    <img src="logo.svg" alt="OWASP TIET Logo" class="logo-img" style="filter: invert(1) drop-shadow(0 0 8px rgba(124,107,255,0.8)) drop-shadow(0 0 20px rgba(124,107,255,0.55));" />
   </div>
   <h1 class="header-title">OWASP TIET Student Chapter<br/>Recruitment 2026</h1>
   <p class="header-desc">
@@ -308,8 +523,8 @@
     Please fill out the form below to apply.
   </p>
   <div class="header-badges">
-    <span class="badge badge-warning">⚡ Batch of 2029 Only</span>
-    <span class="badge badge-danger">🗓 Deadline: 20th July 2026</span>
+    <span class="badge badge-purple"><i class="ph-fill ph-lightning"></i> Batch of 2029 Only</span>
+    <span class="badge badge-cyan"><i class="ph-fill ph-calendar-blank"></i> Deadline: 20th July 2026</span>
   </div>
 </header>
 
@@ -369,27 +584,27 @@
       <div class="choices" id="domain-choices">
         <label class="choice-item">
           <input type="radio" name="domain" value="cybersecurity" onchange="onDomainChange(this)" />
-          <span class="choice-label">🔐 Cybersecurity</span>
+          <span class="choice-label"><i class="ph-fill ph-lock-key"></i> Cybersecurity</span>
         </label>
         <label class="choice-item">
           <input type="radio" name="domain" value="technical" onchange="onDomainChange(this)" />
-          <span class="choice-label">💻 Technical (Web/App/AI/ML/Robotics/IOT)</span>
+          <span class="choice-label"><i class="ph-fill ph-laptop"></i> Technical (Web/App/AI/ML/Robotics/IOT)</span>
         </label>
         <label class="choice-item">
           <input type="radio" name="domain" value="media" onchange="onDomainChange(this)" />
-          <span class="choice-label">📸 Media</span>
+          <span class="choice-label"><i class="ph-fill ph-camera"></i> Media</span>
         </label>
         <label class="choice-item">
           <input type="radio" name="domain" value="designing" onchange="onDomainChange(this)" />
-          <span class="choice-label">🎨 Designing</span>
+          <span class="choice-label"><i class="ph-fill ph-palette"></i> Designing</span>
         </label>
         <label class="choice-item">
           <input type="radio" name="domain" value="marketing" onchange="onDomainChange(this)" />
-          <span class="choice-label">📢 Marketing</span>
+          <span class="choice-label"><i class="ph-fill ph-megaphone"></i> Marketing</span>
         </label>
         <label class="choice-item">
           <input type="radio" name="domain" value="outreach" onchange="onDomainChange(this)" />
-          <span class="choice-label">🤝 Outreach</span>
+          <span class="choice-label"><i class="ph-fill ph-handshake"></i> Outreach</span>
         </label>
       </div>
       <p class="error-msg">Please select a domain preference.</p>
@@ -405,7 +620,7 @@
   ──────────────────────────────────────────────────── -->
   <div class="form-page" id="page-2">
     <div class="section-header">
-      <span class="section-icon">🔐</span>
+      <span class="section-icon"><i class="ph-fill ph-lock-key"></i></span>
       <span class="section-title">Cybersecurity</span>
     </div>
 
@@ -478,7 +693,7 @@
   ──────────────────────────────────────────────────── -->
   <div class="form-page" id="page-3">
     <div class="section-header">
-      <span class="section-icon">💻</span>
+      <span class="section-icon"><i class="ph-fill ph-laptop"></i></span>
       <span class="section-title">Technical</span>
     </div>
 
@@ -542,7 +757,7 @@
   ──────────────────────────────────────────────────── -->
   <div class="form-page" id="page-4">
     <div class="section-header">
-      <span class="section-icon">🎨</span>
+      <span class="section-icon"><i class="ph-fill ph-palette"></i></span>
       <span class="section-title">Design / Media</span>
     </div>
 
@@ -586,7 +801,7 @@
   ──────────────────────────────────────────────────── -->
   <div class="form-page" id="page-5">
     <div class="section-header">
-      <span class="section-icon">📢</span>
+      <span class="section-icon"><i class="ph-fill ph-megaphone"></i></span>
       <span class="section-title">Marketing / Outreach</span>
     </div>
 
@@ -625,7 +840,7 @@
   ──────────────────────────────────────────────────── -->
   <div class="form-page" id="page-6">
     <div class="section-header">
-      <span class="section-icon">✨</span>
+      <span class="section-icon"><i class="ph-fill ph-sparkle"></i></span>
       <span class="section-title">More About Yourself</span>
     </div>
 
@@ -678,7 +893,7 @@
            ondragleave="handleDragLeave(event)"
            ondrop="handleDrop(event)">
         <input type="file" id="resume" name="resume" accept=".pdf,.doc,.docx" onchange="handleFile(this)" />
-        <span class="file-icon">📄</span>
+        <span class="file-icon"><i class="ph-fill ph-file-text"></i></span>
         <span class="file-zone-label">Click to upload or drag & drop</span>
         <span class="file-zone-hint">PDF, DOC, DOCX - Max 10 MB</span>
         <span class="file-name" id="file-name-display"></span>
@@ -695,10 +910,11 @@
   </div>
 
 </div><!-- /form-container -->
+</div><!-- /main-form-content -->
 
 <!-- ═══ SUCCESS ═══ -->
 <div id="success-page">
-  <div class="success-icon">✓</div>
+  <div class="success-icon"><i class="ph-bold ph-check"></i></div>
   <h2 class="success-title">Application Submitted!</h2>
   <p class="success-desc">
     Thank you for applying to the OWASP TIET Student Chapter.<br/>
@@ -714,7 +930,512 @@
 <!-- ═══ TOAST ═══ -->
 <div class="toast" id="toast"></div>
 
+<!-- ═══ THREE.JS & GSAP ═══ -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/SVGLoader.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+
 <script>
+  // ─── LANDING PAGE (PREMIUM JS LOGIC) ─────────────────────────────────
+  const wrapper = document.getElementById('landing-wrapper');
+  const codeTyping = document.getElementById('code-typing');
+  const scrollPrompt = document.getElementById('scroll-prompt');
+  const enterBtn = document.getElementById('enter-btn');
+  const mainFormContent = document.getElementById('main-form-content');
+  const logoContainer = document.getElementById('owasp-logo-container');
+
+  // Ensure initial state
+  mainFormContent.style.display = 'none';
+  window.scrollTo(0, 0);
+
+  // Terminal Code typing effect
+  const codeLines = [
+    "root@owasp-tiet:~# ./init_recruitment.sh",
+    "[*] Establishing secure connection...",
+    "[+] Connection established. 104.21.35.12",
+    "[*] Handshake with OWASP mainframes...",
+    "[+] Handshake complete. RSA-4096 verified.",
+    "[*] Bypassing firewalls...",
+    "    > Node A... OK",
+    "    > Node B... OK",
+    "    > Node C... OK",
+    "[+] Firewall bypassed successfully.",
+    "[*] Decrypting core modules...",
+    "[+] Decryption complete.",
+    "[*] Loading 3D spatial interface...",
+    "[+] Interface loaded."
+  ];
+  let lineIdx = 0, charIdx = 0;
+  function typeCode() {
+    if (lineIdx < codeLines.length) {
+      if (charIdx < codeLines[lineIdx].length) {
+        codeTyping.innerHTML += codeLines[lineIdx][charIdx];
+        charIdx++;
+        setTimeout(typeCode, Math.random() * 10 + 5);
+      } else {
+        codeTyping.innerHTML += "<br/>";
+        charIdx = 0;
+        lineIdx++;
+        // Auto scroll terminal
+        const termBody = document.querySelector('.terminal-body');
+        if (termBody) termBody.scrollTop = termBody.scrollHeight;
+        setTimeout(typeCode, Math.random() * 150 + 50);
+      }
+    }
+  }
+  setTimeout(typeCode, 400);
+
+  // Text Scramble Effect
+  class TextScramble {
+    constructor(el) {
+      this.el = el;
+      this.chars = '!<>-_\\\\/[]{}—=+*^?#________';
+      this.update = this.update.bind(this);
+    }
+    setText(newText) {
+      const oldText = this.el.innerText;
+      const length = Math.max(oldText.length, newText.length);
+      const promise = new Promise((resolve) => this.resolve = resolve);
+      this.queue = [];
+      for (let i = 0; i < length; i++) {
+        const from = oldText[i] || '';
+        const to = newText[i] || '';
+        const start = Math.floor(Math.random() * 40);
+        const end = start + Math.floor(Math.random() * 40);
+        this.queue.push({ from, to, start, end });
+      }
+      cancelAnimationFrame(this.frameRequest);
+      this.frame = 0;
+      this.update();
+      return promise;
+    }
+    update() {
+      let output = '';
+      let complete = 0;
+      for (let i = 0, n = this.queue.length; i < n; i++) {
+        let { from, to, start, end, char } = this.queue[i];
+        if (this.frame >= end) {
+          complete++;
+          output += to;
+        } else if (this.frame >= start) {
+          if (!char || Math.random() < 0.28) {
+            char = this.randomChar();
+            this.queue[i].char = char;
+          }
+          output += `<span class="dud">${char}</span>`;
+        } else {
+          output += from;
+        }
+      }
+      this.el.innerHTML = output;
+      if (complete === this.queue.length) {
+        this.resolve();
+      } else {
+        this.frameRequest = requestAnimationFrame(this.update);
+        this.frame++;
+      }
+    }
+    randomChar() {
+      return this.chars[Math.floor(Math.random() * this.chars.length)];
+    }
+  }
+  const scrambleEl = document.getElementById('scramble-text');
+  const fx = new TextScramble(scrambleEl);
+
+  window.addEventListener('scroll', () => {
+    const section2 = document.getElementById('section-2');
+    const rect = section2.getBoundingClientRect();
+    if (rect.top < window.innerHeight * 0.7 && !scrambled) {
+      scrambled = true;
+      fx.setText('RECRUITMENT 2026');
+    }
+  });
+
+  // HUD SVG Progress & Flow Control
+  let progress = 0;
+  const progressCircle = document.querySelector('.hud-circle-progress');
+  const hudCounter = document.getElementById('hud-counter');
+  const circumference = 283;
+  const countInterval = setInterval(() => {
+    progress += Math.floor(Math.random() * 4) + 1;
+    if (progress >= 100) {
+      progress = 100;
+      clearInterval(countInterval);
+      
+      setTimeout(() => {
+        const terminal = document.getElementById('terminal-window');
+        const hud = document.getElementById('hud-container');
+        
+        // Shatter animation for terminal
+        gsap.to([terminal, hud], {
+          opacity: 0,
+          scale: 1.2,
+          duration: 0.4,
+          ease: "power2.in",
+          onComplete: () => {
+            terminal.style.display = 'none';
+            hud.style.display = 'none';
+          }
+        });
+
+        // Reveal OWASP Image Logo concurrently
+        const logoDom = document.getElementById('owasp-logo-container');
+        if (logoDom) {
+          logoDom.style.display = 'flex';
+          gsap.set(logoDom, { xPercent: -50, yPercent: -50, x: 0, y: 0, scale: 0, opacity: 0 });
+          logoDom.style.transform = ''; // Clear inline transform so GSAP takes over completely
+          
+          gsap.to(logoDom, {
+            opacity: 1,
+            scale: 1,
+            duration: 0.8,
+            ease: "back.out(1.5)"
+          });
+        }
+        
+        setTimeout(() => {
+          scrollPrompt.style.cursor = 'pointer';
+          scrollPrompt.style.pointerEvents = 'auto';
+          scrollPrompt.classList.add('show');
+          scrollPrompt.addEventListener('click', () => {
+            document.getElementById('section-2').scrollIntoView({ behavior: 'smooth' });
+          });
+        }, 1000);
+      }, 500);
+    }
+    hudCounter.textContent = progress.toString().padStart(2, '0') + '%';
+    const offset = circumference - (progress / 100) * circumference;
+    progressCircle.style.strokeDashoffset = offset;
+  }, 45);
+
+  // Draggable Logo Logic
+  let isLandingActive = true;
+  let isDragging = false;
+  let dragStartX = 0, dragStartY = 0;
+  let logoX = 0, logoY = 0; // offset from center
+
+  const handleDragStart = (e) => {
+    isDragging = true;
+    logoContainer.style.transition = 'none'; // Disable transition during drag
+    const clientX = e.clientX || e.touches[0].clientX;
+    const clientY = e.clientY || e.touches[0].clientY;
+    dragStartX = clientX - logoX;
+    dragStartY = clientY - logoY;
+    logoContainer.style.cursor = 'grabbing';
+  };
+  
+  logoContainer.addEventListener('mousedown', handleDragStart);
+  logoContainer.addEventListener('touchstart', handleDragStart, {passive: false});
+
+  const handleDragMove = (e) => {
+    if (!isDragging) return;
+    if (e.cancelable) e.preventDefault(); // Prevent scrolling on mobile while dragging logo
+    const clientX = e.clientX || (e.touches && e.touches[0] ? e.touches[0].clientX : 0);
+    const clientY = e.clientY || (e.touches && e.touches[0] ? e.touches[0].clientY : 0);
+    if (!clientX && !clientY) return;
+
+    let targetX = clientX - dragStartX;
+    let targetY = clientY - dragStartY;
+    
+    const logoWidth = logoContainer.offsetWidth;
+    const logoHeight = logoContainer.offsetHeight;
+    const maxX = (window.innerWidth / 2) - (logoWidth / 2);
+    const maxY = (window.innerHeight / 2) - (logoHeight / 2);
+    
+    logoX = Math.max(-maxX, Math.min(maxX, targetX));
+    logoY = Math.max(-maxY, Math.min(maxY, targetY));
+    
+    logoContainer.style.transform = `translate(calc(-50% + ${logoX}px), calc(-50% + ${logoY}px)) scale(1)`;
+  };
+
+  window.addEventListener('mousemove', handleDragMove);
+  window.addEventListener('touchmove', handleDragMove, {passive: false});
+
+  const handleDragEnd = () => {
+    isDragging = false;
+    logoContainer.style.cursor = 'grab';
+  };
+  window.addEventListener('mouseup', handleDragEnd);
+  window.addEventListener('touchend', handleDragEnd);
+
+  // Liquid Inertia Gamified Button
+  let btnVx = 0;
+  let btnVy = 0;
+  let btnX = 0;
+  let btnY = 0;
+  let btnPhysicsActive = false;
+
+  wrapper.addEventListener('mousemove', (e) => {
+    const x = e.clientX;
+    const y = e.clientY;
+    wrapper.style.background = `radial-gradient(circle at ${x}px ${y}px, rgba(34,197,94,0.05) 0%, #050505 50%)`;
+
+    // Button Physics
+    const section2 = document.getElementById('section-2');
+    const s2Rect = section2.getBoundingClientRect();
+    if (s2Rect.top > window.innerHeight || s2Rect.bottom < 0) return;
+
+    if (!btnPhysicsActive) {
+      btnX = enterBtn.offsetLeft;
+      btnY = enterBtn.offsetTop;
+      enterBtn.style.position = 'absolute';
+      enterBtn.style.margin = '0';
+      enterBtn.style.left = btnX + 'px';
+      enterBtn.style.top = btnY + 'px';
+      btnPhysicsActive = true;
+      requestAnimationFrame(() => updateBtnPhysics());
+    }
+
+    const mouseXRel = e.clientX - s2Rect.left;
+    const mouseYRel = e.clientY - s2Rect.top;
+    
+    const btnCenterX = btnX + enterBtn.offsetWidth / 2;
+    const btnCenterY = btnY + enterBtn.offsetHeight / 2;
+    
+    const dx = btnCenterX - mouseXRel;
+    const dy = btnCenterY - mouseYRel;
+    const dist = Math.sqrt(dx*dx + dy*dy);
+    
+    const repulsionRadius = 150;
+    if (dist < repulsionRadius) {
+      const force = (repulsionRadius - dist) / repulsionRadius;
+      btnVx += (dx / dist) * force * 5.0;
+      btnVy += (dy / dist) * force * 5.0;
+    }
+  });
+
+  function updateBtnPhysics() {
+    if (!isLandingActive) return; // Stop if clicked
+    
+    btnX += btnVx;
+    btnY += btnVy;
+    
+    btnVx *= 0.92; // Friction
+    btnVy *= 0.92;
+    
+    const padding = 20;
+    const section2 = document.getElementById('section-2');
+    const s2Width = section2.offsetWidth;
+    const s2Height = section2.offsetHeight;
+    
+    if (btnX < padding) { btnX = padding; btnVx *= -0.6; }
+    if (btnX + enterBtn.offsetWidth > s2Width - padding) { btnX = s2Width - enterBtn.offsetWidth - padding; btnVx *= -0.6; }
+    if (btnY < padding) { btnY = padding; btnVy *= -0.6; }
+    if (btnY + enterBtn.offsetHeight > s2Height - padding) { btnY = s2Height - enterBtn.offsetHeight - padding; btnVy *= -0.6; }
+    
+    enterBtn.style.left = btnX + 'px';
+    enterBtn.style.top = btnY + 'px';
+    
+    requestAnimationFrame(() => updateBtnPhysics());
+  }
+
+  enterBtn.addEventListener('click', () => {
+    if (!isLandingActive) return;
+    isLandingActive = false;
+    
+    gsap.to(enterBtn, { scale: 1.1, duration: 0.3 });
+    const inner = enterBtn.querySelector('.star-border-inner');
+    inner.innerText = "ACCESS GRANTED";
+    inner.style.color = "#22c55e";
+    
+    // Fly-through explosion effect on 3D scene (zoom rapidly past stars)
+    gsap.to(camera.position, {
+      z: -500, // Rapidly fly forward
+      duration: 0.6,
+      ease: "power2.in"
+    });
+    // Keep particles visible for glassmorphism to refract them
+    gsap.to(material, {
+      opacity: 0.4,
+      duration: 0.6
+    });
+    // Fade out the connecting lines significantly so the form text remains readable
+    gsap.to(lineMaterial, {
+      opacity: 0.03,
+      duration: 0.6
+    });
+    // Blur the canvas slightly to add depth of field and improve text readability
+    gsap.to('#landing-canvas', {
+      filter: 'blur(3px)',
+      duration: 0.6
+    });
+    const logoDom = document.getElementById('owasp-logo-container');
+    if (logoDom) {
+      gsap.to(logoDom, { opacity: 0, duration: 0.3 });
+    }
+
+    setTimeout(() => {
+      wrapper.classList.add('fade-out');
+      setTimeout(() => {
+        wrapper.style.display = 'none';
+        document.body.classList.remove('landing-active');
+        mainFormContent.style.display = 'flex';
+        requestAnimationFrame(() => {
+          window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+          setTimeout(() => { 
+            mainFormContent.style.opacity = '1'; 
+          }, 50);
+        });
+      }, 300);
+    }, 600);
+  });
+
+  // ─── THREE.JS 3D CONSTELLATION & LOGO ────────────────────────────────
+  const canvas = document.getElementById('landing-canvas');
+  const renderer = new THREE.WebGLRenderer({ canvas: canvas, alpha: true, antialias: true });
+  renderer.setPixelRatio(window.devicePixelRatio);
+  let w = window.innerWidth;
+  let h = window.innerHeight;
+  renderer.setSize(w, h);
+
+  const scene = new THREE.Scene();
+  const camera = new THREE.PerspectiveCamera(60, w / h, 1, 2000);
+  camera.position.z = 400;
+
+  // Mobile Performance Check
+  const isMobile = window.innerWidth <= 640;
+  const particleCount = isMobile ? 400 : 800; // Increased particle count for the landing page
+
+  // 3D Particles
+  const geometry = new THREE.BufferGeometry();
+  const positions = new Float32Array(particleCount * 3);
+  const colors = new Float32Array(particleCount * 3);
+  const color1 = new THREE.Color(0xa79aff); // Brighter purple
+  const color2 = new THREE.Color(0x6ee7b7); // Brighter green
+
+  for (let i = 0; i < particleCount; i++) {
+    // Distribute particles in a thick volume to create front/back depth clusters
+    const r = 150 + Math.random() * 850; 
+    const theta = Math.random() * Math.PI * 2;
+    const phi = Math.acos((Math.random() * 2) - 1);
+    positions[i * 3] = r * Math.sin(phi) * Math.cos(theta);
+    positions[i * 3 + 1] = r * Math.sin(phi) * Math.sin(theta);
+    positions[i * 3 + 2] = r * Math.cos(phi);
+
+    const mixColor = Math.random() > 0.5 ? color1 : color2;
+    colors[i * 3] = mixColor.r;
+    colors[i * 3 + 1] = mixColor.g;
+    colors[i * 3 + 2] = mixColor.b;
+  }
+
+  geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+  geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+
+  const particleCanvas = document.createElement('canvas');
+  particleCanvas.width = 64;
+  particleCanvas.height = 64;
+  const particleCtx = particleCanvas.getContext('2d');
+  const gradient = particleCtx.createRadialGradient(32, 32, 0, 32, 32, 32);
+  gradient.addColorStop(0, 'rgba(255,255,255,1)');
+  gradient.addColorStop(0.1, 'rgba(255,255,255,0.8)');
+  gradient.addColorStop(0.4, 'rgba(200,200,255,0.5)');
+  gradient.addColorStop(1, 'rgba(0,0,0,0)');
+  particleCtx.fillStyle = gradient;
+  particleCtx.fillRect(0, 0, 64, 64);
+  const particleTexture = new THREE.CanvasTexture(particleCanvas);
+
+  const material = new THREE.PointsMaterial({
+    size: isMobile ? 20 : 35, // Drastically increased size for big glowing orbs
+    map: particleTexture,
+    vertexColors: true,
+    transparent: true,
+    opacity: 1.0,
+    depthWrite: false,
+    sizeAttenuation: true,
+    blending: THREE.AdditiveBlending
+  });
+
+  const particlesMesh = new THREE.Points(geometry, material);
+  
+  // Create lines connecting nearby particles to simulate a web/constellation
+  const lineMaterial = new THREE.LineBasicMaterial({
+    color: 0xa79aff,
+    transparent: true,
+    opacity: 0.15,
+    blending: THREE.AdditiveBlending,
+    depthWrite: false
+  });
+  
+  const linePositions = [];
+  const connectionDistance = isMobile ? 180 : 220; // Distance to connect
+  
+  for (let i = 0; i < particleCount; i++) {
+    for (let j = i + 1; j < particleCount; j++) {
+      const dx = positions[i * 3] - positions[j * 3];
+      const dy = positions[i * 3 + 1] - positions[j * 3 + 1];
+      const dz = positions[i * 3 + 2] - positions[j * 3 + 2];
+      const distSq = dx * dx + dy * dy + dz * dz;
+      
+      if (distSq < connectionDistance * connectionDistance) {
+        linePositions.push(
+          positions[i * 3], positions[i * 3 + 1], positions[i * 3 + 2],
+          positions[j * 3], positions[j * 3 + 1], positions[j * 3 + 2]
+        );
+      }
+    }
+  }
+  
+  const lineGeometry = new THREE.BufferGeometry();
+  lineGeometry.setAttribute('position', new THREE.Float32BufferAttribute(linePositions, 3));
+  const linesMesh = new THREE.LineSegments(lineGeometry, lineMaterial);
+  
+  // Group particles and lines together so they rotate as one
+  const particleGroup = new THREE.Group();
+  particleGroup.add(particlesMesh);
+  particleGroup.add(linesMesh);
+  scene.add(particleGroup);
+
+  // Parallax & Scroll Fly-through
+  let mouseX = 0;
+  let mouseY = 0;
+  window.addEventListener('mousemove', (e) => {
+    mouseX = (e.clientX - w / 2);
+    mouseY = (e.clientY - h / 2);
+  });
+
+  window.addEventListener('resize', () => {
+    w = window.innerWidth;
+    h = window.innerHeight;
+    camera.aspect = w / h;
+    camera.updateProjectionMatrix();
+    renderer.setSize(w, h);
+  });
+
+  window.addEventListener('scroll', () => {
+    const scrollY = window.scrollY;
+    if (isLandingActive) {
+      gsap.to(camera.position, {
+        z: 400 - scrollY * 0.3,
+        duration: 0.5,
+        ease: "power2.out"
+      });
+    }
+  });
+
+
+  // Animation Loop
+  function animate() {
+    requestAnimationFrame(animate);
+
+    particleGroup.rotation.y += 0.0005;
+    particleGroup.rotation.x += 0.0002;
+
+    if (isLandingActive) {
+      // Highly responsive parallax based on mouse
+      camera.position.x += (mouseX * 0.8 - camera.position.x) * 0.05;
+      camera.position.y += (-mouseY * 0.8 - camera.position.y) * 0.05;
+      camera.lookAt(scene.position);
+    } else {
+      // Very slow camera drift when in form page
+      camera.position.x += Math.sin(Date.now() * 0.0005) * 0.5;
+      camera.position.y += Math.cos(Date.now() * 0.0005) * 0.5;
+      camera.lookAt(scene.position);
+    }
+
+    renderer.render(scene, camera);
+  }
+  animate();
+
   // ─────────────────────────────────────────────────────────────────────
   // ⚠️  Replace with your deployed Google Apps Script Web App URL.
   //     See Code.gs for setup instructions.
