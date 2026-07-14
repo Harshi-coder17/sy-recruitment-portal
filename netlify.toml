@@ -22,10 +22,10 @@
     Permissions-Policy = "geolocation=(), microphone=(), camera=(), payment=()"
 
     # Content Security Policy (M3 security fix)
-    # - script-src 'unsafe-inline': required because all JS is inline (no external .js file)
-    # - style-src 'unsafe-inline': required for inline <style> block
-    # - connect-src: only the Google Apps Script endpoint
-    # - font-src: Google Fonts file server
+    # - script-src: allows inline JS, cdnjs (Three.js/GSAP), unpkg (Phosphor icons)
+    # - style-src: allows inline CSS, Google Fonts, and unpkg (Phosphor icons CSS)
+    # - connect-src: Google Apps Script endpoint and its usercontent redirects
+    # - font-src: Google Fonts and unpkg font files
     # - img-src: local images + base64 data URIs
     # - frame-ancestors 'none': blocks embedding in iframes (stronger than X-Frame-Options)
-    Content-Security-Policy = "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data:; connect-src https://script.google.com; frame-ancestors 'none'; base-uri 'self'; form-action 'none'"
+    Content-Security-Policy = "default-src 'self'; script-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com https://unpkg.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://unpkg.com; font-src https://fonts.gstatic.com https://unpkg.com; img-src 'self' data:; connect-src https://script.google.com https://script.googleusercontent.com; frame-ancestors 'none'; base-uri 'self'; form-action 'none'"
