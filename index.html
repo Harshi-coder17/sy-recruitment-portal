@@ -213,7 +213,12 @@
     @keyframes spin { to { transform:rotate(360deg); } }
 
     /* ─── SUCCESS ─── */
-    #success-page { display:none; text-align:center; padding:80px 24px; animation:fadeSlide 0.5s ease; }
+    #success-page { 
+      display:none; text-align:center; padding:80px 24px; animation:fadeSlide 0.5s ease; 
+      background: rgba(22, 22, 31, 0.4); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+      border: 1px solid var(--border-hi); border-radius: var(--radius-md); 
+      max-width: 680px; margin: 60px auto 0;
+    }
     .success-icon {
       width:90px; height:90px; border-radius:50%;
       background:linear-gradient(135deg,#22c55e,#16a34a);
@@ -2090,6 +2095,15 @@ const DEADLINE_CONFIG = {
       const mainForm = document.getElementById('main-form-content');
       mainForm.style.display = 'flex';
       mainForm.style.opacity = '1';
+
+      // 💥 CRITICAL FIX: Instantly apply the background transition dimming and blur 
+      // so that text is readable when bypassing the landing page via a refresh
+      if (typeof gsap !== 'undefined' && typeof camera !== 'undefined') {
+        gsap.set(camera.position, { z: -500 });
+        gsap.set(material, { opacity: 0.4 });
+        gsap.set(lineMaterial, { opacity: 0.03 });
+        gsap.set('#landing-canvas', { filter: 'blur(3px)' });
+      }
 
       // Calculate and force route to the precise step they left off on
       const targetPage = savedStep ? parseInt(savedStep, 10) : 1;
