@@ -355,9 +355,12 @@
     .scroll-prompt {
       position: absolute; bottom: 40px; left: 50%; transform: translateX(-50%);
       font-family: 'Space Grotesk', sans-serif; font-size: 14px; letter-spacing: 2px;
-      color: var(--label); text-transform: uppercase;
+      color: var(--label); text-transform: uppercase; white-space: nowrap;
       animation: bounce 2s infinite; opacity: 0; transition: opacity 1s ease;
       z-index: 50; pointer-events: none;
+    }
+    @media (max-width: 640px) {
+      .scroll-prompt { font-size: 11px; letter-spacing: 1px; }
     }
     .scroll-prompt.show { opacity: 1; }
     @keyframes bounce { 0%, 20%, 50%, 80%, 100% {transform: translate(-50%, 0);} 40% {transform: translate(-50%, -10px);} 60% {transform: translate(-50%, -5px);} }
@@ -1158,111 +1161,185 @@
   window.addEventListener('mouseup', handleDragEnd);
   window.addEventListener('touchend', handleDragEnd);
 
-  // Liquid Inertia Gamified Button
+  // ─── MOBILE VS DESKTOP ENVIRONMENT SEPARATION ───
+  const isMobileDevice = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) 
+                   || (window.innerWidth < 768) 
+                   || ('ontouchstart' in window);
+
+  // Liquid Inertia Gamified Button Variables
   let btnVx = 0;
   let btnVy = 0;
   let btnX = 0;
   let btnY = 0;
   let btnPhysicsActive = false;
 
-  wrapper.addEventListener('mousemove', (e) => {
-    const x = e.clientX;
-    const y = e.clientY;
-    wrapper.style.background = `radial-gradient(circle at ${x}px ${y}px, rgba(34,197,94,0.05) 0%, #050505 50%)`;
+  if (!isMobileDevice) {
+    // --- DESKTOP UX (Mouse Evasion Physics) ---
+    wrapper.addEventListener('mousemove', (e) => {
+      const x = e.clientX;
+      const y = e.clientY;
+      wrapper.style.background = `radial-gradient(circle at ${x}px ${y}px, rgba(34,197,94,0.05) 0%, #050505 50%)`;
 
-    // Button Physics
-    const section2 = document.getElementById('section-2');
-    const s2Rect = section2.getBoundingClientRect();
-    if (s2Rect.top > window.innerHeight || s2Rect.bottom < 0) return;
+      const section2 = document.getElementById('section-2');
+      const s2Rect = section2.getBoundingClientRect();
+      if (s2Rect.top > window.innerHeight || s2Rect.bottom < 0) return;
 
-    if (!btnPhysicsActive) {
-      btnX = enterBtn.offsetLeft;
-      btnY = enterBtn.offsetTop;
-      enterBtn.style.position = 'absolute';
-      enterBtn.style.margin = '0';
+      if (!btnPhysicsActive) {
+        btnX = enterBtn.offsetLeft;
+        btnY = enterBtn.offsetTop;
+        enterBtn.style.position = 'absolute';
+        enterBtn.style.margin = '0';
+        enterBtn.style.left = btnX + 'px';
+        enterBtn.style.top = btnY + 'px';
+        btnPhysicsActive = true;
+        requestAnimationFrame(() => updateBtnPhysics());
+      }
+
+      const mouseXRel = e.clientX - s2Rect.left;
+      const mouseYRel = e.clientY - s2Rect.top;
+      
+      const btnCenterX = btnX + enterBtn.offsetWidth / 2;
+      const btnCenterY = btnY + enterBtn.offsetHeight / 2;
+      
+      const dx = btnCenterX - mouseXRel;
+      const dy = btnCenterY - mouseYRel;
+      const dist = Math.sqrt(dx*dx + dy*dy);
+      
+      const repulsionRadius = 150;
+      if (dist < repulsionRadius) {
+        const force = (repulsionRadius - dist) / repulsionRadius;
+        btnVx += (dx / dist) * force * 5.0;
+        btnVy += (dy / dist) * force * 5.0;
+      }
+    });
+
+    function updateBtnPhysics() {
+      if (!isLandingActive) return; 
+      
+      btnX += btnVx;
+      btnY += btnVy;
+      btnVx *= 0.92; 
+      btnVy *= 0.92;
+      
+      const padding = 20;
+      const section2 = document.getElementById('section-2');
+      const s2Width = section2.offsetWidth;
+      const s2Height = section2.offsetHeight;
+      
+      if (btnX < padding) { btnX = padding; btnVx *= -0.6; }
+      if (btnX + enterBtn.offsetWidth > s2Width - padding) { btnX = s2Width - enterBtn.offsetWidth - padding; btnVx *= -0.6; }
+      if (btnY < padding) { btnY = padding; btnVy *= -0.6; }
+      if (btnY + enterBtn.offsetHeight > s2Height - padding) { btnY = s2Height - enterBtn.offsetHeight - padding; btnVy *= -0.6; }
+      
       enterBtn.style.left = btnX + 'px';
       enterBtn.style.top = btnY + 'px';
-      btnPhysicsActive = true;
+      
       requestAnimationFrame(() => updateBtnPhysics());
     }
 
-    const mouseXRel = e.clientX - s2Rect.left;
-    const mouseYRel = e.clientY - s2Rect.top;
-    
-    const btnCenterX = btnX + enterBtn.offsetWidth / 2;
-    const btnCenterY = btnY + enterBtn.offsetHeight / 2;
-    
-    const dx = btnCenterX - mouseXRel;
-    const dy = btnCenterY - mouseYRel;
-    const dist = Math.sqrt(dx*dx + dy*dy);
-    
-    const repulsionRadius = 150;
-    if (dist < repulsionRadius) {
-      const force = (repulsionRadius - dist) / repulsionRadius;
-      btnVx += (dx / dist) * force * 5.0;
-      btnVy += (dy / dist) * force * 5.0;
-    }
-  });
+    enterBtn.addEventListener('click', () => {
+      if (!isLandingActive) return;
+      isLandingActive = false;
+      
+      gsap.to(enterBtn, { scale: 1.1, duration: 0.3 });
+      const inner = enterBtn.querySelector('.star-border-inner');
+      inner.innerText = "ACCESS GRANTED";
+      inner.style.color = "#22c55e";
+      
+      triggerCoreSystemTransition();
+    });
 
-  function updateBtnPhysics() {
-    if (!isLandingActive) return; // Stop if clicked
+  } else {
+    // --- MOBILE UX (Touch Whack-a-Mole Game & Gyroscope Setup) ---
+    console.log("System: Mobile environment detected. Activating touch interactive loops.");
     
-    btnX += btnVx;
-    btnY += btnVy;
-    
-    btnVx *= 0.92; // Friction
-    btnVy *= 0.92;
-    
-    const padding = 20;
+    // Explicitly enforce relative layout anchor on section-2 parent container dynamically
     const section2 = document.getElementById('section-2');
-    const s2Width = section2.offsetWidth;
-    const s2Height = section2.offsetHeight;
-    
-    if (btnX < padding) { btnX = padding; btnVx *= -0.6; }
-    if (btnX + enterBtn.offsetWidth > s2Width - padding) { btnX = s2Width - enterBtn.offsetWidth - padding; btnVx *= -0.6; }
-    if (btnY < padding) { btnY = padding; btnVy *= -0.6; }
-    if (btnY + enterBtn.offsetHeight > s2Height - padding) { btnY = s2Height - enterBtn.offsetHeight - padding; btnVy *= -0.6; }
-    
-    enterBtn.style.left = btnX + 'px';
-    enterBtn.style.top = btnY + 'px';
-    
-    requestAnimationFrame(() => updateBtnPhysics());
+    section2.style.position = 'relative';
+
+    let mobileTapCount = 0;
+    const maxTaps = 5;
+
+    enterBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      if (!isLandingActive) return;
+
+      mobileTapCount++;
+
+      if (mobileTapCount < maxTaps) {
+        // Taps 1-4: Whack-a-Mole relocation
+        if (navigator.vibrate) navigator.vibrate(20);
+        
+        gsap.to(enterBtn, {
+          opacity: 0,
+          scale: 0.8,
+          duration: 0.15,
+          onComplete: () => {
+            enterBtn.style.position = 'absolute';
+            enterBtn.style.margin = '0';
+            
+            const btnWidth = enterBtn.offsetWidth || 160;
+            const btnHeight = enterBtn.offsetHeight || 50;
+            const padding = 20;
+            
+            // Calculate safety coordinates within container boundaries safely
+            const safeX = Math.max(padding, section2.offsetWidth - btnWidth - padding);
+            const safeY = Math.max(padding, section2.offsetHeight - btnHeight - padding);
+            
+            enterBtn.style.left = (padding + Math.random() * (safeX - padding)) + 'px';
+            enterBtn.style.top = (padding + Math.random() * (safeY - padding)) + 'px';
+            
+            gsap.to(enterBtn, { opacity: 1, scale: 1, duration: 0.2, ease: "back.out(2)" });
+          }
+        });
+      } else {
+        // Tap 5: Unlock sequence triggered
+        isLandingActive = false;
+        if (navigator.vibrate) navigator.vibrate([40, 30, 40]);
+        
+        gsap.to(enterBtn, { scale: 1.1, duration: 0.3 });
+        const inner = enterBtn.querySelector('.star-border-inner');
+        inner.innerText = "DECRYPTING...";
+        inner.style.color = "#a855f7";
+        inner.style.boxShadow = "0 0 25px rgba(168, 85, 247, 0.8)";
+        inner.style.borderColor = "#a855f7";
+
+        // Hold text framework frame context for 400ms before triggering WebGL transition
+        setTimeout(() => {
+          triggerCoreSystemTransition();
+        }, 400);
+      }
+    });
+
+    // Mobile Gyroscope 3D Camera Tracking
+    if (window.DeviceOrientationEvent) {
+      window.addEventListener('deviceorientation', (event) => {
+        if (!isLandingActive) return;
+        const tiltX = event.gamma || 0; 
+        const tiltY = event.beta || 0;
+        
+        const targetX = tiltX * 0.5;
+        const targetY = (tiltY - 45) * 0.5; 
+        
+        gsap.to(camera.position, {
+          x: targetX,
+          y: targetY,
+          duration: 0.5,
+          ease: "power1.out"
+        });
+      }, true);
+    }
   }
 
-  enterBtn.addEventListener('click', () => {
-    if (!isLandingActive) return;
-    isLandingActive = false;
+  // Unified transition pipeline execution to prevent animation timing conflicts
+  function triggerCoreSystemTransition() {
+    gsap.to(camera.position, { z: -500, duration: 0.6, ease: "power2.in" });
+    gsap.to(material, { opacity: 0.4, duration: 0.6 });
+    gsap.to(lineMaterial, { opacity: 0.03, duration: 0.6 });
+    gsap.to('#landing-canvas', { filter: 'blur(3px)', duration: 0.6 });
     
-    gsap.to(enterBtn, { scale: 1.1, duration: 0.3 });
-    const inner = enterBtn.querySelector('.star-border-inner');
-    inner.innerText = "ACCESS GRANTED";
-    inner.style.color = "#22c55e";
-    
-    // Fly-through explosion effect on 3D scene (zoom rapidly past stars)
-    gsap.to(camera.position, {
-      z: -500, // Rapidly fly forward
-      duration: 0.6,
-      ease: "power2.in"
-    });
-    // Keep particles visible for glassmorphism to refract them
-    gsap.to(material, {
-      opacity: 0.4,
-      duration: 0.6
-    });
-    // Fade out the connecting lines significantly so the form text remains readable
-    gsap.to(lineMaterial, {
-      opacity: 0.03,
-      duration: 0.6
-    });
-    // Blur the canvas slightly to add depth of field and improve text readability
-    gsap.to('#landing-canvas', {
-      filter: 'blur(3px)',
-      duration: 0.6
-    });
     const logoDom = document.getElementById('owasp-logo-container');
-    if (logoDom) {
-      gsap.to(logoDom, { opacity: 0, duration: 0.3 });
-    }
+    if (logoDom) gsap.to(logoDom, { opacity: 0, duration: 0.3 });
 
     setTimeout(() => {
       wrapper.classList.add('fade-out');
@@ -1272,13 +1349,11 @@
         mainFormContent.style.display = 'flex';
         requestAnimationFrame(() => {
           window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
-          setTimeout(() => { 
-            mainFormContent.style.opacity = '1'; 
-          }, 50);
+          setTimeout(() => { mainFormContent.style.opacity = '1'; }, 50);
         });
       }, 300);
     }, 600);
-  });
+  }
 
   // ─── THREE.JS 3D CONSTELLATION & LOGO ────────────────────────────────
   const canvas = document.getElementById('landing-canvas');
@@ -1420,10 +1495,13 @@
     particleGroup.rotation.y += 0.0005;
     particleGroup.rotation.x += 0.0002;
 
-    if (isLandingActive) {
-      // Highly responsive parallax based on mouse
+    if (isLandingActive && !isMobileDevice) {
+      // Highly responsive parallax based on mouse (Desktop)
       camera.position.x += (mouseX * 0.8 - camera.position.x) * 0.05;
       camera.position.y += (-mouseY * 0.8 - camera.position.y) * 0.05;
+      camera.lookAt(scene.position);
+    } else if (isLandingActive && isMobileDevice) {
+      // Mobile: camera position is controlled by gyroscope via GSAP
       camera.lookAt(scene.position);
     } else {
       // Very slow camera drift when in form page
