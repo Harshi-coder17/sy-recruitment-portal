@@ -1346,126 +1346,6 @@ const DEADLINE_CONFIG = {
     const enterBtn = document.getElementById('enter-btn');
     if (enterBtn) enterBtn.style.display = 'none'; // Permanently hide the static button
 
-    // --- PREMIUM MOBILE FLUID PHYSICS LOOP ---
-    // Gathers your landing text components to treat them as fluid floating bodies
-    const fluidElements = [
-      document.querySelector('#terminal-window'),
-      document.querySelector('#hud-container'),
-      document.querySelector('#scroll-prompt')
-    ].filter(el => el !== null);
-
-    // Track position coordinates, velocities, and layout parameters for each text node
-    // Pass 1: Read all absolute physical positions safely while still in natural layout flow
-    const section1 = document.getElementById('section-1');
-    
-    // CRITICAL: parent must be position: relative BEFORE we absolute-position its children
-    section1.style.position = 'relative';
-    section1.style.zIndex = '10';
-
-    const initialBounds = fluidElements.map(el => {
-      const rect = el.getBoundingClientRect();
-      const parentRect = section1.getBoundingClientRect();
-      return {
-        x: rect.left - parentRect.left,
-        y: rect.top - parentRect.top,
-        width: rect.width,
-        height: rect.height
-      };
-    });
-
-    // Pass 2: Apply absolute positioning and map to physics objects
-    let physicsNodes = fluidElements.map((el, i) => {
-      const bounds = initialBounds[i];
-      
-      // Set absolute positioning styles so they can move freely across the screen space
-      el.style.position = 'absolute';
-      el.style.margin = '0';
-      el.style.transformOrigin = 'center';
-      el.style.transition = 'none'; // Clear CSS transitions so JS handles smooth velocity updates
-      el.style.left = bounds.x + 'px';
-      el.style.top = bounds.y + 'px';
-
-      return {
-        element: el,
-        x: bounds.x,
-        y: bounds.y,
-        vx: 0, // Velocity X
-        vy: 0, // Velocity Y
-        width: bounds.width,
-        height: bounds.height,
-        mass: 1.0
-      };
-    });
-
-    let gyroGravityX = 0;
-    let gyroGravityY = 0;
-
-    // Listen to device tilt sensors to shift the gravity vector orientation dynamically
-    if (window.DeviceOrientationEvent) {
-      window.addEventListener('deviceorientation', (event) => {
-        const tiltX = event.gamma || 0; // Left/Right tilt (-90 to 90)
-        const tiltY = event.beta || 0;  // Front/Back tilt (-180 to 180)
-
-        // Normalize tilt angles into fluid gravity force values (dampened for smooth sliding)
-        gyroGravityX = (tiltX / 90) * 0.4;
-        gyroGravityY = ((tiltY - 45) / 90) * 0.4; // Assumes normal hand-held viewing angle of ~45 degrees
-      }, true);
-    }
-
-    // High-performance animation frame loop to simulate fluid dynamics
-    function runFluidPhysicsSimulation() {
-      if (!isLandingActive || thresholdTriggered) return; // Terminate if user scratches to open form
-
-      const screenW = window.innerWidth;
-      const screenH = window.innerHeight;
-      const padding = 16; // Edge padding restraint safety margin
-
-      physicsNodes.forEach(node => {
-        // 1. Apply gravity forces shifted by gyro sensor inputs
-        node.vx += gyroGravityX;
-        node.vy += gyroGravityY;
-
-        // 2. Introduce soft fluid resistance/friction to simulate sloshing dampening
-        node.vx *= 0.95;
-        node.vy *= 0.95;
-
-        // 3. Update spatial positions
-        node.x += node.vx;
-        node.y += node.vy;
-
-        // 4. Enforce Screen Boundary Constraints (Collisions with device edges)
-        // Left & Right limits
-        if (node.x < padding) {
-          node.x = padding;
-          node.vx *= -0.4; // Bounce restitution bounce coefficient
-        } else if (node.x + node.width > screenW - padding) {
-          node.x = screenW - node.width - padding;
-          node.vx *= -0.4;
-        }
-
-        // Top & Bottom limits
-        if (node.y < padding) {
-          node.y = padding;
-          node.vy *= -0.4;
-        } else if (node.y + node.height > screenH - padding) {
-          node.y = screenH - node.height - padding;
-          node.vy *= -0.4;
-        }
-
-        // 5. Commit layout changes to the viewport DOM node instantly
-        node.element.style.left = node.x + 'px';
-        node.element.style.top = node.y + 'px';
-        
-        // Add a subtle dynamic rotational tilt depending on speed to look more "watery"
-        const rotationTilt = node.vx * 1.5;
-        node.element.style.transform = `rotate(${rotationTilt}deg)`;
-      });
-
-      requestAnimationFrame(runFluidPhysicsSimulation);
-    }
-
-    // Start the physics rendering frame execution tree loop instantly
-    requestAnimationFrame(runFluidPhysicsSimulation);
 
     // Core SVG Mask Path Generation Variables
     const section2 = document.getElementById('section-2');
@@ -1475,6 +1355,7 @@ const DEADLINE_CONFIG = {
     let pathLength = 0;
     let lastPos = null;
     let thresholdTriggered = false;
+    let expansionStrokeWidth = 0;
     let isFormConfigured = false; // Layout initialization lock flag
 
     // 2. Dynamic Form Position Initializer
@@ -1513,9 +1394,9 @@ const DEADLINE_CONFIG = {
         <defs>
           <mask id="m">
             <rect width="100%" height="100%" fill="white"/>
-            <path d="${pathD_s2}" fill="none" stroke="black" stroke-width="140" stroke-opacity="0.2" stroke-linecap="round" stroke-linejoin="round"/>
-            <path d="${pathD_s2}" fill="none" stroke="black" stroke-width="100" stroke-opacity="0.5" stroke-linecap="round" stroke-linejoin="round"/>
-            <path d="${pathD_s2}" fill="none" stroke="black" stroke-width="60" stroke-opacity="1" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="${pathD_s2}" fill="none" stroke="black" stroke-width="${140 + expansionStrokeWidth}" stroke-opacity="0.2" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="${pathD_s2}" fill="none" stroke="black" stroke-width="${100 + expansionStrokeWidth}" stroke-opacity="0.5" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="${pathD_s2}" fill="none" stroke="black" stroke-width="${60 + expansionStrokeWidth}" stroke-opacity="1" stroke-linecap="round" stroke-linejoin="round"/>
           </mask>
         </defs>
         <rect width="100%" height="100%" fill="white" mask="url(#m)"/>
@@ -1525,9 +1406,9 @@ const DEADLINE_CONFIG = {
         <defs>
           <mask id="m_form">
             <rect width="100%" height="100%" fill="black"/>
-            <path d="${pathD_form}" fill="none" stroke="white" stroke-width="140" stroke-opacity="0.2" stroke-linecap="round" stroke-linejoin="round"/>
-            <path d="${pathD_form}" fill="none" stroke="white" stroke-width="100" stroke-opacity="0.5" stroke-linecap="round" stroke-linejoin="round"/>
-            <path d="${pathD_form}" fill="none" stroke="white" stroke-width="60" stroke-opacity="1" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="${pathD_form}" fill="none" stroke="white" stroke-width="${140 + expansionStrokeWidth}" stroke-opacity="0.2" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="${pathD_form}" fill="none" stroke="white" stroke-width="${100 + expansionStrokeWidth}" stroke-opacity="0.5" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="${pathD_form}" fill="none" stroke="white" stroke-width="${60 + expansionStrokeWidth}" stroke-opacity="1" stroke-linecap="round" stroke-linejoin="round"/>
           </mask>
         </defs>
         <rect width="100%" height="100%" fill="white" mask="url(#m_form)"/>
@@ -1564,9 +1445,11 @@ const DEADLINE_CONFIG = {
 
       lastPos = { x: touch.clientX, y: touch.clientY };
       updateMasks();
-    }, { passive: true });
+    }, { passive: false });
 
     section2.addEventListener('touchmove', (e) => {
+      // Prevent native browser scroll or pull-to-refresh while scratching
+      e.preventDefault(); 
       if (!isDrawing || thresholdTriggered) return;
       const touch = e.touches[0];
       
@@ -1595,42 +1478,51 @@ const DEADLINE_CONFIG = {
       const estimatedArea = pathLength * 110; 
       const screenArea = window.innerWidth * window.innerHeight;
 
-      if (estimatedArea > screenArea * 0.38) {
+      if (estimatedArea > screenArea * 0.68) {
         thresholdTriggered = true;
         isDrawing = false;
         isLandingActive = false; // Synchronize global state to lock out Gyroscope tracking engine
         
         if (navigator.vibrate) navigator.vibrate([40, 30, 40]);
 
-        const wrapper = document.getElementById('landing-wrapper');
-        if (wrapper) {
-          wrapper.style.transition = 'opacity 0.6s cubic-bezier(0.4, 0, 0.2, 1)';
-          wrapper.style.opacity = '0';
-        }
-
-        setTimeout(() => {
-          if (wrapper) wrapper.style.display = 'none';
-          document.body.classList.remove('landing-active');
-
-          // ─── CRITICAL CLEANUP: Hide the absolute physics elements completely
-          fluidElements.forEach(node => {
-            if (node) node.style.display = 'none';
-          });
-
-          // Strip layout restrictions and return the document back to standard flow
-          mainFormContent.style.position = 'static';
-          mainFormContent.style.height = 'auto';
-          mainFormContent.style.overflow = 'visible';
-          mainFormContent.style.zIndex = '1';
-          mainFormContent.style.webkitMaskImage = 'none';
-          mainFormContent.style.maskImage = 'none';
+        // Elegant SVG Mask Expansion Animation
+        function animateMaskExpansion() {
+          expansionStrokeWidth += 120; // Rapidly bloat the SVG stroke widths
+          updateMasks();
           
-          // Execute global scroll adjustments safely inside static layout context
-          window.scrollTo(0, 0);
-          console.log("Portal Decrypted: Inline gesture workflow verified and unlocked.");
-        }, 600);
+          if (expansionStrokeWidth < 3000) {
+            requestAnimationFrame(animateMaskExpansion);
+          } else {
+            // Once mask has elegantly erased the screen, commit standard layout flow
+            const wrapper = document.getElementById('landing-wrapper');
+            if (wrapper) {
+              wrapper.style.transition = 'opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1)';
+              wrapper.style.opacity = '0';
+            }
+
+            setTimeout(() => {
+              if (wrapper) wrapper.style.display = 'none';
+              document.body.classList.remove('landing-active');
+
+              // Strip layout restrictions and return the document back to standard flow
+              mainFormContent.style.position = 'static';
+              mainFormContent.style.height = 'auto';
+              mainFormContent.style.overflow = 'visible';
+              mainFormContent.style.zIndex = '1';
+              mainFormContent.style.webkitMaskImage = 'none';
+              mainFormContent.style.maskImage = 'none';
+              
+              // Execute global scroll adjustments safely inside static layout context
+              window.scrollTo(0, 0);
+              console.log("Portal Decrypted: Inline gesture workflow verified and unlocked.");
+            }, 400);
+          }
+        }
+        
+        // Start the expansion animation loop
+        requestAnimationFrame(animateMaskExpansion);
       }
-    }, { passive: true });
+    }, { passive: false });
 
     section2.addEventListener('touchend', () => {
       isDrawing = false;
