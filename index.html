@@ -66,6 +66,10 @@
       max-width: 320px;
       height: auto;
       display: block;
+      /* Prevent dragging & highlighting that causes black ghosting */
+      pointer-events: none;
+      -webkit-user-drag: none;
+      user-select: none;
       /* Neon purple glow directly on the logo */
       filter:
         drop-shadow(0 0 8px rgba(124,107,255,0.8))
@@ -1318,14 +1322,16 @@
         const tiltX = event.gamma || 0; 
         const tiltY = event.beta || 0;
         
-        const targetX = tiltX * 0.5;
-        const targetY = (tiltY - 45) * 0.5; 
+        // Amplify tilt sensitivity for a heavy "watery" feel
+        const targetX = tiltX * 3.0;
+        const targetY = (tiltY - 45) * 3.0; 
         
+        // Use a longer duration and sine easing to simulate fluid sloshing inertia
         gsap.to(camera.position, {
           x: targetX,
           y: targetY,
-          duration: 0.5,
-          ease: "power1.out"
+          duration: 1.8,
+          ease: "sine.out"
         });
       }, true);
     }
