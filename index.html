@@ -943,6 +943,19 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
 
 <script>
+// ==========================================
+// ⚙️ GLOBAL PORTAL CONFIGURATION
+// ==========================================
+// Simply update these numbers whenever the recruitment dates shift!
+const DEADLINE_CONFIG = {
+  YEAR:   2026,
+  MONTH:  6,    // ⚠️ Note: Jan = 0, Feb = 1, Mar = 2 ... June = 5, July = 6, etc.
+  DAY:    18,   // Change this to 18, 21, or whatever day you need!
+  HOUR:   23,   // 24-hour format (23 = 11 PM)
+  MINUTE: 59,
+  SECOND: 59
+};
+
   // ─── LANDING PAGE (PREMIUM JS LOGIC) ─────────────────────────────────
   const wrapper = document.getElementById('landing-wrapper');
   const codeTyping = document.getElementById('code-typing');
@@ -954,6 +967,66 @@
   // Ensure initial state
   mainFormContent.style.display = 'none';
   window.scrollTo(0, 0);
+
+  document.addEventListener("DOMContentLoaded", () => {
+    // 1. Build the deadline date object dynamically from the configuration above
+    const expiryDeadline = new Date(
+      DEADLINE_CONFIG.YEAR,
+      DEADLINE_CONFIG.MONTH,
+      DEADLINE_CONFIG.DAY,
+      DEADLINE_CONFIG.HOUR,
+      DEADLINE_CONFIG.MINUTE,
+      DEADLINE_CONFIG.SECOND
+    );
+    const systemNow = new Date();
+
+    if (systemNow > expiryDeadline) {
+        // 2. Hide active application layers instantly
+        const landingWrapper = document.getElementById('landing-wrapper');
+        const mainFormContent = document.getElementById('main-form-content');
+        
+        if (landingWrapper) landingWrapper.style.display = 'none';
+        if (mainFormContent) mainFormContent.style.display = 'none';
+        
+        document.body.classList.remove('landing-active');
+        
+        // 3. Inject native-styled Google Forms style closed notice
+        const lockoutNotice = document.createElement('div');
+        lockoutNotice.style.width = '100%';
+        lockoutNotice.style.maxWidth = '680px';
+        lockoutNotice.style.marginTop = '80px';
+        lockoutNotice.style.padding = '0 clamp(12px, 4vw, 24px)';
+        
+        lockoutNotice.innerHTML = `
+          <div style="text-align: center; margin-bottom: 32px;">
+            <img src="logo.svg" alt="OWASP Logo" style="width: 100%; max-width: 240px; height: auto; display: inline-block; filter: invert(1) drop-shadow(0 0 15px rgba(124,107,255,0.4));" />
+          </div>
+
+          <div class="field-card" style="text-align: center; padding: 48px 32px; border-top: 4px solid var(--red); background: rgba(22, 22, 31, 0.6);">
+            <div style="font-size: 48px; color: var(--red); margin-bottom: 16px;">
+              <i class="ph-fill ph-warning-circle"></i>
+            </div>
+            
+            <h1 style="font-family: 'Space Grotesk', sans-serif; font-size: clamp(24px, 5vw, 32px); font-weight: 700; color: var(--text); margin-bottom: 16px; line-height: 1.3;">
+              Form Closed
+            </h1>
+            
+            <p style="font-family: 'Inter', sans-serif; font-size: 15px; color: var(--label); line-height: 1.7; max-width: 520px; margin: 0 auto 24px;">
+              The form <strong>OWASP TIET Student Chapter Recruitment 2026</strong> is no longer accepting responses. <br>
+              This form has been automatically closed by the administrator because the submission window has concluded.
+            </p>
+
+            <div style="border-top: 1px solid var(--border); padding-top: 24px; margin-top: 12px;">
+              <p style="font-size: 13px; color: var(--muted); font-family: monospace;">
+                SYSTEM_STATUS // ACCESS_REVOKED
+              </p>
+            </div>
+          </div>
+        `;
+        
+        document.body.appendChild(lockoutNotice);
+    }
+});
 
   // Terminal Code typing effect
   const codeLines = [
@@ -1575,6 +1648,9 @@
 
   // ─── NAVIGATION ──────────────────────────────────────────────────────
   function showPage(n) {
+    // Save the step number to memory every time the user moves pages
+    localStorage.setItem('owasp_recruitment_step', n);
+
     document.querySelectorAll('.form-page').forEach(p => p.classList.remove('active'));
     document.getElementById('page-' + n).classList.add('active');
     currentPage = n;
@@ -1887,6 +1963,10 @@
       console.log('[OWASP Form] Submission OK. emailStatus =', json.emailStatus || 'n/a');
 
       // ── Success ──
+      // Clear data cache keys instantly so a fresh user can use the device
+      localStorage.removeItem('owasp_recruitment_draft');
+      localStorage.removeItem('owasp_recruitment_step');
+
       document.getElementById('progress-wrap').style.display  = 'none';
       document.getElementById('form-container').style.display = 'none';
       document.getElementById('success-page').style.display   = 'block';
@@ -1933,6 +2013,93 @@
   // ─── BOOT ────────────────────────────────────────────────────────────
   initDots();
   updateProgress(1, 3);
+  // ─── LOCAL STORAGE DATA PERSISTENCE LIFECYCLE ───
+  const DATA_KEY = 'owasp_recruitment_draft';
+  const STEP_KEY = 'owasp_recruitment_step';
+
+  // 1. Gather all inputs inside the form container
+  const formFields = document.querySelectorAll(
+    '#form-container input[type="text"], #form-container input[type="email"], #form-container input[type="tel"], #form-container input[type="url"], #form-container textarea, #form-container input[type="radio"]'
+  );
+
+  // 2. Auto-Save Action: Triggered on input changes
+  function saveProgress() {
+    let currentDraft = {};
+
+    formFields.forEach(field => {
+      if (field.type === 'radio') {
+        if (field.checked) {
+          currentDraft[field.name] = field.value;
+        }
+      } else {
+        currentDraft[field.id] = field.value;
+      }
+    });
+
+    localStorage.setItem(DATA_KEY, JSON.stringify(currentDraft));
+  }
+
+  // Bind real-time tracking listeners to all fields
+  formFields.forEach(field => {
+    field.addEventListener('input', saveProgress);
+    field.addEventListener('change', saveProgress);
+  });
+
+  // 3. Auto-Load Action: Triggered on page refresh initialization
+  function loadProgress() {
+    const savedData = localStorage.getItem(DATA_KEY);
+    const savedStep = localStorage.getItem(STEP_KEY);
+    
+    if (!savedData) return;
+
+    const draft = JSON.parse(savedData);
+    let hasDataData = false;
+
+    // Populate data back into fields safely
+    formFields.forEach(field => {
+      if (field.type === 'radio') {
+        if (draft[field.name] === field.value) {
+          field.checked = true;
+          // Highlight the radio card context outline visually
+          const labelItem = field.closest('.choice-item');
+          if (labelItem) labelItem.classList.add('selected');
+          
+          // Set global logic choice tracker state
+          selectedDomain = field.value; 
+          hasDataData = true;
+        }
+      } else if (draft[field.id]) {
+        field.value = draft[field.id];
+        hasDataData = true;
+      }
+    });
+
+    // 4. Smooth Layout Restoration Loop
+    if (hasDataData) {
+      console.log("System: Active application draft recognized. Restoring session state.");
+      
+      // Disable the interactive landing structures globally
+      isLandingActive = false;
+
+      // Strip landing classes and drop visibility wrappers instantly 
+      const landingWrapper = document.getElementById('landing-wrapper');
+      if (landingWrapper) landingWrapper.style.display = 'none';
+      document.body.classList.remove('landing-active');
+
+      // Bring the form layer context forward completely
+      const mainForm = document.getElementById('main-form-content');
+      mainForm.style.display = 'flex';
+      mainForm.style.opacity = '1';
+
+      // Calculate and force route to the precise step they left off on
+      const targetPage = savedStep ? parseInt(savedStep, 10) : 1;
+      showPage(targetPage);
+    }
+  }
+
+  // Execute compilation validation scan instantly
+  loadProgress();
+
 </script>
 </body>
 </html>
