@@ -1722,10 +1722,6 @@ const DEADLINE_CONFIG = {
   }
   animate();
 
-  // ─────────────────────────────────────────────────────────────────────
-  // ⚠️  Replace with your deployed Google Apps Script Web App URL.
-  //     See Code.gs for setup instructions.
-  // ─────────────────────────────────────────────────────────────────────
   const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzgrkHBx5RJkDke44k5gx5WaGdmwLurlHJbXnECAjr0xk0BkFhmZcMjI3HLu_f6t3Zv-g/exec';
 
   // ─── STATE ───────────────────────────────────────────────────────────
@@ -2064,7 +2060,7 @@ const DEADLINE_CONFIG = {
         resumeBase64:   base64,
       };
 
-      // POST — use text/plain to avoid CORS preflight (Apps Script doesn't handle OPTIONS)
+
       const res = await fetch(APPS_SCRIPT_URL, {
         method:   'POST',
         redirect: 'follow',
@@ -2072,17 +2068,13 @@ const DEADLINE_CONFIG = {
         body:     JSON.stringify(payload),
       });
 
-      // Apps Script responds through a Google redirect (script.google.com →
-      // script.googleusercontent.com). res.json() sometimes fails on the
-      // redirected response even when the backend succeeded. Use res.text()
-      // + manual parse with a safe fallback instead.
+
       let json;
       try {
         const text = await res.text();
         json = JSON.parse(text);
       } catch (_) {
-        // Can't parse the response — but if fetch() didn't throw, the backend
-        // received and processed the request (sheet + Drive already updated).
+
         console.warn('[OWASP Form] Response parse failed — assuming success (data saved).');
         json = { success: true, emailStatus: 'unknown (response unparseable)' };
       }
