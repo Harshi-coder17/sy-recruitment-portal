@@ -1126,6 +1126,7 @@ const DEADLINE_CONFIG = {
   }
   const scrambleEl = document.getElementById('scramble-text');
   const fx = new TextScramble(scrambleEl);
+  let scrambled = false;
 
   window.addEventListener('scroll', () => {
     const section2 = document.getElementById('section-2');
@@ -1722,7 +1723,7 @@ const DEADLINE_CONFIG = {
   }
   animate();
 
-  const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzgrkHBx5RJkDke44k5gx5WaGdmwLurlHJbXnECAjr0xk0BkFhmZcMjI3HLu_f6t3Zv-g/exec';
+  const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwxh-SnrzwfHfxeF-IIk4fTcc2M2DLmlFVKOTn95cL1MPUto2bAUUPyPp0MF6BDISe2/exec';
 
   // ─── STATE ───────────────────────────────────────────────────────────
   let currentPage    = 1;
